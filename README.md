@@ -36,7 +36,9 @@
 
 ## 推送本地 dev 分支到远程 dev 分支
 
-1. git push ogigin dev 推送本地 dev 分支到远程 dev 分支
+1. git add -A  提交所有新增的文件和修改过后的文件
+2. git commit -m"" 提交到本地仓库
+3. git push origin dev 推送本地 dev 分支到远程 dev 分支
 
 
 ## React每一个组件都必须引入 import React, { Component } from 'react' 不管用不用
@@ -53,3 +55,36 @@
 
 1. 第三方模块  import ReactDOM from 'react-dom'  不需要具体路径
 2. 自定义模块  import App from './App.jsx' 需要具体路径
+
+
+## 渲染组件
+
+	// 将App组件标签渲染到index页面的div上
+	ReactDOM.render(<App />, document.getElementById('root'));
+
+## 解决移动端点击事件300ms延迟
+
+	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+
+	  <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+	  <script>
+	    if ('addEventListener' in document) {
+	      document.addEventListener('DOMContentLoaded', function() {
+	        FastClick.attach(document.body);
+	      }, false);
+	    }
+	    if(!window.Promise) {
+	      document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
+	    }
+	  </script>
+
+## src 目录结构
+
+1. api        ===>ajax相关的文件
+2. assets     ===>共用资源
+3. components ===>非路由组件
+4. config     ===>配置
+5. pages      ===>路由组件
+6. utils      ===>工具模块 (日期格式化 数据缓存)
+7. App.jsx    ===>应用根组件
+8. index.js   ===>入口js
