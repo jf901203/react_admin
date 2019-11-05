@@ -7,3 +7,49 @@
 3. npm run build 生产环境打包 生成本地文件(最终放到服务器上的文件)
 4. npm install -g serve 在本地打开打包后的本地文件
 5. serve build 打开本地打包的文件
+
+
+
+## git 
+
+1. git init 初始化本地仓库
+2. git add . 添加到暂存区
+3. git commit -m"" 提交到本地仓库
+4. git romote add origin https://github.com/jf901203/react_admin.git 关联远程仓库
+5. git push origin master 把本地仓库的资源推送到远程分支
+
+
+## 新建分支
+
+1. git checkout -b dev (分支名) 在本地新建分支并切换分支 分支的代码与主支的一致
+2. git push origin dev 将本地分支推送到远程分支
+
+
+## 从远程克隆分支到本地
+
+1. git clone https://github.com/jf901203/react_admin.git 克隆远程仓库地址
+2. cd react_admin 进入仓库
+3. git checkout -b dev origin/dev 根据远程dev分支生成本地dev分支
+4. git branch 查看分支
+5. git pull origin dev 从远程分支dev拉取到本地dev
+
+
+## 推送本地 dev 分支到远程 dev 分支
+
+1. git push ogigin dev 推送本地 dev 分支到远程 dev 分支
+
+
+## React每一个组件都必须引入 import React, { Component } from 'react' 不管用不用
+
+1. render()函数 必须返回一个虚拟DOM对象
+2. 用jsx语法创建虚拟DOM对象
+3. 最终生成一个真实DOM对象
+
+## 渲染成真正的DOM对象
+
+1. 需要引入一个库 import ReactDOM from 'react-dom'
+
+## 引入模块
+
+1. 第三方模块  import ReactDOM from 'react-dom'  不需要具体路径
+2. 自定义模块  import App from './App.jsx' 需要具体路径
