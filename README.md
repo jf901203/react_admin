@@ -88,3 +88,26 @@
 6. utils      ===>工具模块 (日期格式化 数据缓存)
 7. App.jsx    ===>应用根组件
 8. index.js   ===>入口js
+
+
+## 使用react组件库 
+
+1. npm install antd --save
+
+## 实现按需加载的依赖库
+
+1. npm install --save react-app-rewired 
+2. npm install --save babel-plugin-import
+3. npm install --save customize-cra
+
+## 在根目录下(不是在src目录)定义加载配置的js模块 config-overrides.js
+
+	const { override, fixBabelImports } = require('customize-cra');
+	
+	module.exports = override(
+	    fixBabelImports('import', {
+	        libraryName: 'antd',
+	        libraryDirectory: 'es',
+	        style: 'css',
+	    }),
+	    );
