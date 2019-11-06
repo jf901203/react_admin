@@ -51,10 +51,12 @@
 
 1. 需要引入一个库 import ReactDOM from 'react-dom'
 
-## 引入模块
+## 引入模块 自定义模块有相对路劲的关系
 
 1. 第三方模块  import ReactDOM from 'react-dom'  不需要具体路径
 2. 自定义模块  import App from './App.jsx' 需要具体路径
+3. 自定义模块会有相对路径的关系
+4. 第三模块没有相对路劲的关系
 
 
 ## 渲染组件
@@ -89,12 +91,16 @@
 7. App.jsx    ===>应用根组件
 8. index.js   ===>入口js
 
+## ui组件库 写标签传属性
 
-## 使用react组件库 
+## 使用react组件库  antd组件库 默认是全部打包 
+
+1. https://ant.design/components/button-cn/
+2. https://mobile.ant.design/components/button-cn/
 
 1. npm install antd --save
 
-## 实现按需加载的依赖库
+## 实现按需加载的依赖库 根据 import引入进来的组件进行打包
 
 1. npm install --save react-app-rewired 
 2. npm install --save babel-plugin-import
@@ -111,3 +117,90 @@
 	        style: 'css',
 	    }),
 	    );
+
+## 引入组件库中的某一个组件
+
+1. import { Button } from 'antd-mobile'
+
+# 自定义antd主题 antd就是用less写的 就是改变样式的颜色
+
+1. npm install --save less less-loader
+
+	const { override, fixBabelImports,addLessLoader } = require('customize-cra');
+
+    // 实现按需打包 antd组件：根据import进来的组件进行打包
+
+    module.exports = override(
+
+	    fixBabelImports('import', {
+	        libraryName: 'antd',
+	        libraryDirectory: 'es',
+	        style: true, //自动打包相关组件对应的样式
+	    }),
+        // 使用less-loader对源码中的less的变量进行重新覆盖
+	    addLessLoader({
+	          javascriptEnabled: true,
+	          modifyVars: { '@primary-color': '#1DA57A' },
+	         })
+
+    );
+
+
+## 引入理由react-router-dom
+
+1. 下载路由包：npm install --save react-router-dom
+
+## 路由器标签
+
+1. BroserRouter
+2. HashRouter
+
+## 路由切标签
+
+1. Link
+2. NavLink
+3. Redirect
+
+## 路由组件显示标签
+
+1. Route
+
+## 多个路由组件只匹配显示标签
+
+1. Switch===>Route
+
+
+## 一级路由需要在路由外层加路由器
+
+    render() {
+	    return (
+	      <BrowserRouter>
+	        <Switch>
+	          <Route path="/login" component={Login}></Route>
+	          <Route path="/" component={Admin}></Route>
+	        </Switch>
+	      </BrowserRouter>
+	    )
+
+
+## 引入样式重置文件 reset.css
+
+## react中用的less编译器
+
+1. less结构化编写
+
+
+## 按钮
+
+1. 一般按钮 不会有提交的功能
+2. 提交按钮 type="submit" 会触发onSubmit事件
+
+
+## 前台表单验证
+
+
+## 后台表单验证
+
+
+## 收集表单数据进行发请求
+
