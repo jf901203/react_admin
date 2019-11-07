@@ -146,7 +146,7 @@
     );
 
 
-## 引入理由react-router-dom
+## 引入路由react-router-dom
 
 1. 下载路由包：npm install --save react-router-dom
 
@@ -155,7 +155,7 @@
 1. BroserRouter
 2. HashRouter
 
-## 路由切标签
+## 路由导航标签
 
 1. Link
 2. NavLink
@@ -193,8 +193,71 @@
 ## 按钮
 
 1. 一般按钮 不会有提交的功能
-2. 提交按钮 type="submit" 会触发onSubmit事件
+2. 提交按钮 type="submit" 会触发onSubmit事件 阻止事件的默认行为 e.preventDefalut()
 
+## 高阶函数
+
+1. 一类特别的函数
+   - 接收函数作为参数的函数
+   - 返回值是函数
+2. 满足以上任何一个条件就是高阶函数
+3. 常见的高价函数 setTimeout()
+4. setInterval()
+5. Promise()
+6. then()
+7. reduce()
+8. filter()
+9. find()
+10. some()
+11. forEach()
+12. map()
+13. findIndex()
+14. fn.bind()返回一个函数 fn.bind()() 函数对象的bind()方法
+15. Form.create()(Login) 
+16. getFieldDecorator()()
+17. catch()
+
+## 高阶组件(函数) 父组件向子组件传递属性 
+
+1. 本质是一个函数
+2. 接收一个组件(被包装组件)返回一个新组件(包装组件)
+3. 包装组件向被包装组件传入特定的属性
+4. 渲染的是包装组件 即新组件
+5. Form.create()返回的函数是高阶组件 这个组件接收一个组件做为函数的参数 产生一个新的组件
+6. 高阶组件接收一个组件返回一个新的组件
+7. 渲染的是新的组件(包装组件) 新的组件包装了被包装的组件
+8. 新组件是父组件 被包装的组件是子组件 父组件向子组件传递属性
+9. 高阶组件也是高级函数 接收的是组件函数 返回的是新的组件函数
+
+1. const  WrapLogin = Form.create()(Login); 接收一个组件做为函数的参数  Login是组件 <Login/>是组件标签 即组件对象
+2. 返回一个包装有form表单的组件并向组件传递了this.props.form对象
+
+
+## 创建组件的两种语法
+
+1. 工厂函数 返回一个对象
+2. 类定义  类的本质是一个函数
+
+
+## 组件与组件标签
+
+1. 组件是一个构造函数 是一个类      类型 Login
+2. 组件标签是某一个类的实例 组件对象 实例 <Login/>
+
+
+## getFieldDecorator('标识名称',{})(表单控件)
+
+## 数组中的数据以下标做为标识
+
+## 对象中的数据以名称作为标识
+
+
+## 配置对象(属性名是一些特定的名称) 声明式配置对象
+
+1. 什么是配置对象
+2. 属性名是一些特定的名称 就是配置对象
+3. options包含选项的对象
+4. 每一个特定的属性就是一个option
 
 ## 前台表单验证
 
@@ -204,3 +267,18 @@
 
 ## 收集表单数据进行发请求
 
+
+
+## 利用axios封装ajax请求模块
+
+1.  npm install --save axios
+
+
+## 后端node用commonJs模块
+
+1. const axios = require('axios')
+
+
+## 前端用ES6模块
+
+1. import axios from 'axios'
