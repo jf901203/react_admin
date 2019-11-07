@@ -282,3 +282,17 @@
 ## 前端用ES6模块
 
 1. import axios from 'axios'
+
+
+## 项目是前后台分离的项目
+
+1. 前台应用与后台应用
+2. 后台应用负责处理前台应用提交的请求 并给前台应用返回json数据
+3. 前台应用负责展现数据 与用户交互 与后台应用交互
+
+
+## 安装mongodb
+
+1. 启动mongodb mongod.exe --dbpath C:\Program Files\MongoDB\Server\4.0\data
+2. It looks like you are trying to access MongoDB over HTTP on the native driver port.
+3. MongoDB已经开启
