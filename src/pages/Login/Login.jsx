@@ -3,9 +3,11 @@ import {
   Form, 
   Icon, 
   Input, 
-  Button 
+  Button ,
+  message
 } from 'antd'
 
+import {reqLogin} from '../../api'
 import './login.less'
 import logo from './img/logo.jpg'
 
@@ -29,9 +31,21 @@ import logo from './img/logo.jpg'
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log(values);
+       
+       const {username,password} =values
+      //  await===promise.then(data) <===resolve(data)
+       const result=await reqLogin(username,password)
+       if(result.status===0){
+         //  登入成功
+         message.success('登入成功')
+         // 跳转到管理页面
+         this.props.history.replace('/')
+       }else{
+        //  登入不成功
+        message.error(result.msg)
+       }
       }
     });
   }

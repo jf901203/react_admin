@@ -261,6 +261,22 @@
 
 ## 前台表单验证
 
+1. 验证通过
+2. 发送请求请求实现登入功能
+
+
+## 发送请求得到用户信息
+
+1. 在前台把用户信息保存起来实行用户的自动登入功能
+
+## 发送请求的两种方式
+
+1. get请求会把参数和地址一起发送  params
+2. post请求会把请求参数放到请求体中 body
+3. from-data 表示带文件的表单提交
+4. x-www-form-urincoded 提交纯文本类型的form表单
+5. raw 文件
+6. binary 文件
 
 ## 后台表单验证
 
@@ -273,6 +289,45 @@
 
 1.  npm install --save axios
 
+		/*
+		 能发异步ajax请求的函数模块
+		 封装axios库
+		 函数的返回值是promise对象
+		 用axios发异步的ajax请求
+		 axios.get() 返回的是一个promise对象  所以可以promise=axios.get()  promise.then(()=>{})
+		 axios.get().then()
+		*/
+		
+		import axios from 'axios'
+
+		export default function ajax(url,data={},type="GET"){
+		 return new Promise((resolve,reject)=>{
+		    let promise
+		    if(type==="GET"){
+		      // let base=''
+		      // Object.keys(data).forEach((item)=>{
+		      //   base+=item+'='+data[item]+'&'
+		      // })
+		      // if(base!==''){
+		      //   base=base.substr(0,base.lastIndexOf('&'))
+		      //   url+='?'+base
+		      // }
+		      promise=axios.get(url,{ //配置对象  params指定的query的参数
+		        params:data //指定请求的参数
+		      }
+		      )
+		    }else{
+		      promise=axios.post(url,data)
+		    }
+		    promise.then((res)=>{
+		      resolve(res.data)
+		    }).catch((error)=>{
+		      reject(error)
+		    })
+		  })
+		}
+
+
 
 ## 后端node用commonJs模块
 
@@ -282,17 +337,171 @@
 ## 前端用ES6模块
 
 1. import axios from 'axios'
+2. axios.get(url,{params:{}}).then().catch()  axios.get()返回的是promise对象
+3. axios.post().then().catch()   xios.post()返回的是promise对象
+4. new Promise(()=>{}).then().catch()  new Promise 返回promise对象
 
 
-## 项目是前后台分离的项目
+## 项目是前后台分离的项目 前端请求后端的主域名
 
 1. 前台应用与后台应用
 2. 后台应用负责处理前台应用提交的请求 并给前台应用返回json数据
 3. 前台应用负责展现数据 与用户交互 与后台应用交互
+4. 前端的应用在3000的端口展示 后台的接口在5000的端口上面
+5. 会涉及到跨域的问题 3000的端口去请求5000的端口 端口号不一致造成了跨域
 
+
+## 解决跨域请求
+
+1. jsonp只能解决get的方式发送的请求 不能解决post的发送的请求
+2. cors 后台允许跨域
+3. 代理  代理监视的是前端的端口 转发的目的是后端的端口
+
+## 配置代理解决ajax请求跨域问题 在react中配置代理
+
+1. "proxy": "http://localhost:5000"
+2. 5000端口下才有对应的后端路由处理
+3. /login
+
+
+## 在浏览器查看请求的ajax (XHR)===>XMLHttpRequest()
+
+1. 请求的路劲   Header Request URL: http://localhost:3000/login
+2. 请求的方式   Header Request Method: POST
+3. 请求的参数   Header Request payload
+4. 响应的数据   Response
 
 ## 安装mongodb
 
 1. 启动mongodb mongod.exe --dbpath C:\Program Files\MongoDB\Server\4.0\data
 2. It looks like you are trying to access MongoDB over HTTP on the native driver port.
 3. MongoDB已经开启
+
+## 测试接口
+
+1. 在访问请求代码前
+2. 用Postman 邮递员软件测试接口
+3. postman是用来测试API的工具
+4. postman可以看做活的接口文档
+
+
+## 暴露模块的方式
+
+1. 分别暴露
+2. 统一暴露
+
+
+## 分别暴露
+
+	import ajax from './ajax'
+	export const reqLogin=(username,password)=>ajax('/login',{username,password},'POST')
+
+## 统一暴露
+
+	import ajax from './ajax'
+
+	export default{
+
+	  reqLogin(username,password){return ajax('/login',{username,password},'POST')},
+
+	  reqOut(){}
+	
+	}
+
+
+## 函数的参数 参数默认值是对象 实参传值的时候也是对象
+
+1. function login(data={}){}
+2. login({name,pwd})
+
+
+## async和await
+
+1. 作用
+2. 
+   - 简化了promise对象的使用
+   - 不再使用then()来指定成功/失败的回调函数
+   - 以同步的编码方式(没有回调函数了)实现异步的流程 没有写回调函数
+   - await reqLogin(username,password)  没有then()回调代码
+
+2. 哪里写await 返回promise表达式的左侧  await===promise.then()
+
+  - 先确定await 再确定async
+  - 在返回promise表达式的左侧写await 不想要promise 想要promise异步执行的成功的value数据
+  - await必须写在async函数中
+  - await reqLogin() 等待 等到函数返回一个成功的数据
+
+3. 哪里写async 函数定义的左侧
+
+  - 写在await所在函数的左侧
+  - await在哪个函数async就在哪个函数的左侧
+  - await所在函数(最近的)定义的左侧写async
+
+
+
+## 回调函数的分类 区别在于放到回调队列等待执行和不放到回调队列 立即执行 Promise(同步执行的回调函数).then(异步执行的回调函数).catch(异步执行的回调函数)
+
+1. 同步回调
+2. 异步回调
+
+
+## 同步回调
+
+1. 理解：立即执行 完全执行完了才结束 不会放入到回调队列中
+2. 例子：数组相关的回调函数/Promise(()=>{})的excutor执行器函数
+3. Promise(同步执行的回调函数).then(异步执行的回调函数).catch(异步执行的回调函数)
+4. arr.find(执行器函数)
+5. arr.map(执行器函数)
+6. arr.filter(执行器函数)
+
+## 异步回调
+
+1. 理解：不会立即执行 会放入到回调队列中等待将来执行
+2. 例子：定时器回调/ajax回调/Promise的成功回调then()/失败的回调catch()
+
+
+## Promise封装axios
+
+	new Promise(()=>{
+	 
+	 1. 执行异步ajax请求
+	
+	 2. 如果请求成功了 调用resolve(val)
+	 
+	 3. 如果请求失败了 不调用reject() 而是提示异常信息
+	
+	
+	})
+
+
+## 封装axios 
+
+	import axios from 'axios'
+	export defalut function  ajax(url,data={},type="GET") {
+	
+		if(type==="GET"){
+            //返回的是promise对象  外面调用ajax().then((response)=>{}) 就可以拿到数据
+	      return axios.get(url,{params:data})
+		}else{
+            //返回的是promise对象
+			return axios.post(url,data)
+		}
+		
+	}
+   
+	   const reqLogin=(name,pwd)=>ajax('/login',{name,pws}) ===>得到一个promise对象
+	   
+	   async getLogin(){
+	     //处理异常
+	    try{
+	      const res=await reqLogin(name,pwd)
+	    }catch(error){
+	      console.log(error.message)
+	    }
+	
+	   }
+
+
+## 编程式导航
+
+1. this.props.history.replace('/')
