@@ -6,11 +6,13 @@ import {
   Button ,
   message
 } from 'antd'
+import {Redirect} from 'react-router-dom'
 
 import {reqLogin} from '../../api'
 import './login.less'
 import logo from './img/logo.jpg'
-
+import store from '../../utils/localStorage'
+import memery from '../../utils/memeryUtil'
  class Login extends Component {
 
   validatorHandle=(rule, value, callback)=>{
@@ -40,6 +42,11 @@ import logo from './img/logo.jpg'
        if(result.status===0){
          //  登入成功
          message.success('登入成功')
+         const user=result.data
+        //  存到内存中
+         memery.user=user
+        //  存到本地缓存
+         store.saveUser(user)
          // 跳转到管理页面
          this.props.history.replace('/')
        }else{
@@ -52,6 +59,16 @@ import logo from './img/logo.jpg'
 
 
   render() {
+    
+    // 如果用已经登入了 就自动跳转到管理界面 不让用户在登入界面
+    const user=memery.user
+   if(user && user._id){
+    
+    return (
+      <Redirect to="/"></Redirect>
+    )
+
+   }
 
     const form=this.props.form;
     const { getFieldDecorator } = form;

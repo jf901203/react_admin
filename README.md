@@ -53,7 +53,7 @@
 
 ## 引入模块 自定义模块有相对路劲的关系
 
-1. 第三方模块  import ReactDOM from 'react-dom'  不需要具体路径
+1. 第三方模块  import ReactDOM from 'react-dom'  不需要具体路径 会自动去node_modules依赖中找
 2. 自定义模块  import App from './App.jsx' 需要具体路径
 3. 自定义模块会有相对路径的关系
 4. 第三模块没有相对路劲的关系
@@ -159,7 +159,7 @@
 
 1. Link
 2. NavLink
-3. Redirect
+3. Redirect 有自动跳转的功能 to="/login" 自动跳转到/login路由
 
 ## 路由组件显示标签
 
@@ -168,6 +168,16 @@
 ## 多个路由组件只匹配显示标签
 
 1. Switch===>Route
+
+
+## 在事件回调中做跳转
+
+1. this.props.history.replace()
+2. this.props.history.push()
+
+## 在render()函数中做跳转
+
+1. return <Redirect to=""></Redirect>
 
 
 ## 一级路由需要在路由外层加路由器
@@ -264,6 +274,121 @@
 1. 验证通过
 2. 发送请求请求实现登入功能
 
+## 维持登入与自动登入 必须将用户信息保存在刷新之后 关掉浏览器之后依然存在的位置
+
+1. 维持登入 刷新不掉线 
+2. 关掉应用后开启应用实现免登入功能
+3. localStorage 持久化登入
+
+
+## 维持登入与自动登入
+
+1. 登入后 刷新依然是已登入状态(维持登入)
+2. 登入后 关闭浏览器后打开浏览器访问依然是已登入状态(自动登入)
+
+
+3. 登入后 访问登入路径自动跳转到管理界面
+
+
+## localStorage
+
+1. 持久化存储
+2. 关掉浏览器 关掉应用不会影响到数据的丢失
+
+
+## JSON.parse() 方法将数据转换为 JavaScript 对象
+
+1. text:必需，一个有效JSON格式的字符串。
+
+## JSON对象
+
+1. SON 对象在大括号（{}）中书写：
+2. { "name":"菜鸟教程" , "url":"www.runoob.com" }
+
+## JSON 数据的书写格式是：名称/值对
+
+1. 名称/值对包括字段名称（在双引号中），后面写一个冒号，然后是值
+
+
+## JSON.parse()
+
+1. 在接收服务器数据时一般是字符串 { "name":"runoob", "alexa":10000, "site":"www.runoob.com" } ===>一个json字符串对象
+2. JSON.parse() 方法处理以上数据，将其转换为 JavaScript 对象
+3. var obj = JSON.parse('{ "name":"runoob", "alexa":10000, "site":"www.runoob.com" }') ===>将json字符串对象转换成js对象
+4. { "name":"runoob", "alexa":10000, "site":"www.runoob.com" } ===>js对象
+
+
+## JSON.stringify(value)
+
+1. 在向服务器发送数据时一般是字符串
+2. JSON.stringify() 方法将 JavaScript 对象转换为字符串 
+3. value 要转换的 JavaScript 值（通常为对象或数组）
+4. var obj = { "name":"runoob", "alexa":10000, "site":"www.runoob.com"} ===>js对象 向服务器发送数据
+5. JSON.stringify(obj) 将这个js对象转换成json的字符串发送给服务器
+6. '{ "name":"runoob", "alexa":10000, "site":"www.runoob.com"}'===>装换成json的字符串
+
+
+## 封装locaStorage
+
+	/*
+	  但是刷新之后就掉线了
+	  怎么维持不掉线呢
+	
+	*/
+	const USER_KEY="user_key"
+	export default {
+	//  保存user对象 存一个json字符串
+	 saveUser(user){
+	  return localStorage.setItem(USER_KEY,JSON.stringify(user));
+	 },
+	//  读取user对象 读一个js对象
+	 readerUser(){
+	   return JSON.parse(localStorage.getItem(USER_KEY) || '{}')
+	 },
+	
+	//  删除user
+	
+	removeUser(){
+	  localStorage.removeItem(USER_KEY);
+	}
+	
+	}
+
+## store跨浏览器本地存储的简单API
+
+1. npm install --save store
+2. import store from 'store'
+
+	const USER_KEY="user_key"
+
+	export default {
+		
+		 saveUser(user){
+		  return store.set(USER_KEY)
+		 },
+		
+		 readerUser(){
+		   return store.get(USER_KEY) || {}
+		 },
+		
+		//  删除user
+		
+		removeUser(){
+		  store.remove(USER_KEY')
+		}
+		
+		}
+
+## 从内存中读取user 不是从localStorage中读
+	
+	import store from './utils/localStorage'
+	import memery from './utils/memeryUtil'
+	
+	// 读取local中保存的user 保存到内存中
+	
+	const user=store.readerUser()
+	memery.user=user
+1. 以后直接从内存中读取user 就不用从localStorage中读取user信息了
 
 ## 发送请求得到用户信息
 
@@ -376,6 +501,15 @@
 1. 启动mongodb mongod.exe --dbpath C:\Program Files\MongoDB\Server\4.0\data
 2. It looks like you are trying to access MongoDB over HTTP on the native driver port.
 3. MongoDB已经开启
+4. 先安装好MongoDB，并且切换到MongoDB的bin目录下
+5. net start MongoDB 命令 启动MongoDB
+
+
+## 启动MongoDB的方式
+
+1. 先安装好MongoDB，并且切换到MongoDB的bin目录下
+2. net start MongoDB命令 启动MongoDB
+
 
 ## 测试接口
 
@@ -502,6 +636,14 @@
 	   }
 
 
-## 编程式导航
+## 编程式导航 在事件回调函数中调用
 
 1. this.props.history.replace('/')
+2. this.props.history.push()
+
+
+## 作用域  在作用域中的数据别的作用域都看不见 需要数据传递
+
+1. 全局作用域
+2. 函数作用域
+3. 组件作用域
