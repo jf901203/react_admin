@@ -1,83 +1,75 @@
 import React, { Component } from 'react'
+import {Link,withRouter} from 'react-router-dom'
+import {  Menu, Icon } from 'antd';
 
-
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-
-
+import menuList from '../../menuConfig/menuList'
 import './LeftNav.less'
 import logo from './img/logo.jpg'
-const { Header, Content, Footer, Sider } = Layout;
+
 const { SubMenu } = Menu;
 
 
 
-export default class LeftNav extends Component {
+
+ class LeftNav extends Component {
+// 根据数据数组生成标签数组 map()高阶函数需要 return
+  getMenuNode=(menuList)=>{
+    return menuList.map((item)=>{
+      if(!item.children){
+        return(
+          <Menu.Item key={item.key}>
+               <Link to={item.key}>
+                <Icon type={item.type} />
+                  {item.title}
+              </Link>
+            </Menu.Item>
+        )
+      }else{
+        return (
+          <SubMenu
+          key={item.key}
+          title={
+            <span>
+              <Icon type={item.type} />
+              <span>{item.title}</span>
+            </span>
+          }
+        >
+         
+         {
+        
+          // 递归调用
+          this.getMenuNode(item.children)
+        
+        }
+          
+      </SubMenu>
+        )
+      }
+
+    })
+  
+  }
+
+
   render() {
+    const path=this.props.location.pathname
     return (
       <div className="left-nav">
          <header className="left-nav-header">
            <img src={logo} alt="logo"/>
            <h1>MR.GAO后台</h1>
          </header>
-         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+         <Menu theme="dark" selectedKeys={[path]} mode="inline">
       
-            <Menu.Item key="1">
-              <Icon type="home" />
-              首页
-            </Menu.Item>
-    
-            <SubMenu
-                key="sub2"
-                title={
-                  <span>
-                    <Icon type="user" />
-                    <span>商品</span>
-                  </span>
-                }
-              >
-                <Menu.Item key="3">
-                <Icon type="apartment" />
-                  品类管理
-                </Menu.Item>
-                <Menu.Item key="4">
-                <Icon type="branches" />
-                  商品管理
-                </Menu.Item>
-                
-            </SubMenu>
-            <Menu.Item key="6">
-            <Icon type="user" />
-              用户管理
-            </Menu.Item>
-            <Menu.Item key="7">
-            <Icon type="slack" />
-              角色管理
-            </Menu.Item>
-            <SubMenu
-                key="sub3"
-                title={
-                  <span>
-                    <Icon type="area-chart"/>
-                    <span>图形图表</span>
-                  </span>
-                }
-              >
-                <Menu.Item key="8">
-                <Icon type="bar-chart" />
-                  柱形图
-                </Menu.Item>
-                <Menu.Item key="9">
-                <Icon type="line-chart" />
-                  折线图
-                </Menu.Item>
-                <Menu.Item key="10">
-                <Icon type="pie-chart" />
-                  饼图
-                </Menu.Item>
-            </SubMenu>
+            {
+              this.getMenuNode(menuList)
+            }
 
           </Menu>
       </div>
     )
   }
 }
+// 让一个非路由组件变成一个路由组件
+export default withRouter(LeftNav)

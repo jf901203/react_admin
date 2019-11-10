@@ -167,8 +167,15 @@
 
 ## 多个路由组件只匹配显示标签
 
-1. Switch===>Route
+1. 
+2. 
+3. ===>Route
 
+
+## Switch
+
+1. 会监听到所有的路由路劲与Route中的path进行匹配 匹配成功就显示
+2. 匹配不成功 就会执行 Redirect to=""
 
 ## 在事件回调中做跳转
 
@@ -511,6 +518,11 @@
 2. net start MongoDB命令 启动MongoDB
 
 
+## C:\Users\Administrator>net start MongoDB 发生系统错误 5。  拒绝访问。
+
+1. 按Windows+X+A，直接打开命令提示过（管理员），再次输入确认问题
+2. net start MongoDB
+
 ## 测试接口
 
 1. 在访问请求代码前
@@ -647,3 +659,196 @@
 1. 全局作用域
 2. 函数作用域
 3. 组件作用域
+
+
+
+## 路由
+
+1. 一级路由
+2. 二级路由
+
+
+## 路由组件拥有的三大属性 可以通过浏览器工具react-devtools可以查看 前提是路由组件
+
+1. this.props.history
+2. this.props.location
+3. this.props.match
+
+##　一般组件想拥有路由组件的三个属性必须用到路由的withRouter()高阶组件函数
+
+1. withRouter()包装一个非路由组件 反回一个新的组件
+2. withRouter()高阶组件
+3. 新的组件向非路由组件传递3个属性:history/loaction/match
+
+## 组件的任何属性都是从props中获取 可以通过react-devTools浏览器工具查看
+
+
+##　模块类型
+
+1. 模块类型设置为对象 对象中添加属性就可以存储数据了　
+
+　　　export default {
+			  user:{}
+		}
+2.　模块类型设置为数组　根据数据数组产生标签数组
+		const menuList=[
+		    {
+		        key:"/home",
+		        type:'home',
+		        title:'首页'
+		    },
+		    {
+		        key:"/products",
+		        type:'user',
+		        title:'商品',
+		        children:[
+		            {
+		                key:"/category",
+		                type:'apartment',
+		                title:'品类管理'
+		            },
+		            {
+		                key:"/product",
+		                type:'branches',
+		                title:'商品管理'
+		            }
+		        ]
+		    },
+		    {
+		        key:"/user",
+		        type:'user',
+		        title:'用户管理'
+		    },
+		    {
+		        key:"/role",
+		        type:'slack',
+		        title:'角色管理'
+		    },
+		    {
+		        key:"/gragh",
+		        type:'area-chart',
+		        title:'图形图表',
+		        children:[
+		            {
+		                key:'/pillar',
+		                type:'bar-chart',
+		                title:'柱形图'
+		            },
+		            {
+		                key:'/line',
+		                type:'line-chart',
+		                title:'折线图'
+		            },
+		            {
+		                key:'/pie',
+		                type:'pie-chart',
+		                title:'饼图'
+		            }
+		        ]
+		    }
+		    
+		]
+		
+		export default  menuList
+
+## map() 加 递归调用
+
+			getMenuNode=(menuList)=>{
+			    return menuList.map((item)=>{
+			      if(!item.children){
+			        return(
+			          <Menu.Item key={item.key}>
+			               <Link to={item.key}>
+			                <Icon type={item.type} />
+			                  {item.title}
+			              </Link>
+			            </Menu.Item>
+			        )
+			      }else{
+			        return (
+			          <SubMenu
+			          key={item.key}
+			          title={
+			            <span>
+			              <Icon type={item.type} />
+			              <span>{item.title}</span>
+			            </span>
+			          }
+			        >
+			         
+			         {
+			          //  item.children.map((child)=>{
+			          //   return(
+			          //     <Menu.Item key={child.key}>
+			          //     <Link to={child.key}>
+			          //      <Icon type={child.type} />
+			          //        {child.title}
+			          //    </Link>
+			          //  </Menu.Item>
+			          //   )
+			
+			          //  })
+			          // 递归调用
+			          this.getMenuNode(item.children)
+			        
+			        }
+			          
+			      </SubMenu>
+			        )
+			      }
+			
+			    })
+			  
+			  }
+
+
+## reduce()加递归调用  reduce((pre,item)=>{},[]) 累计累加  往数组中添加数据也是一种累加
+
+1. []初始值
+2. pre 上一次统计的结果
+3. 一直用同一个pre 一直往pre中添加
+
+
+		getMenuNode=(menuList)=>{
+
+		    return menuList.reduce((pre,item)=>{
+		      if(!item.children){
+		        pre.push(
+		           (
+		             <Menu.Item key={item.key}>
+		               <Link to={item.key}>
+		                <Icon type={item.type} />
+		                  {item.title}
+		              </Link>
+		            </Menu.Item>
+		            )
+		           )
+		      }else{
+		       
+		         pre.push((
+		          <SubMenu
+		          key={item.key}
+		          title={
+		            <span>
+		              <Icon type={item.type} />
+		              <span>{item.title}</span>
+		            </span>
+		          }
+		        >
+		         
+		         {
+		          
+		          this.getMenuNode(item.children)
+		        
+		        }
+		          
+		      </SubMenu>
+		           ))
+		       
+		      }
+		    //返回统计的结果 作为下一次统计的条件
+		    return pre; 
+		
+		    },[])
+		  
+		  }
