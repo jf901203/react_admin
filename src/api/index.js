@@ -8,8 +8,13 @@
 ajax('/login',{username:'zhang',password:'123'},'POST')
 
 */
+
+import jsonp from 'jsonp'
+import { message} from 'antd'
+
 // ajax发送请求函数
 import ajax from './ajax'
+
 
 
 
@@ -33,3 +38,39 @@ export const reqUpdateCate=(categoryId,categoryName)=>ajax('/manage/category/upd
 export const reqInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
 // 获取商品列表接口函数
 export const reqProduct=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
+
+
+// jsonp接口请求函数
+
+export const reqWeather=(city)=>{
+
+   return new Promise((resolve,reject)=>{
+
+    const url=` http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
+    jsonp(url,{},(err,data)=>{
+        
+    //   如果成功的返回了数据 就把数据交出去
+    
+    if(!err || data.status==='success'){
+       const {dayPictureUrl,weather} =data.results[0].weather_data[0]
+       const {date}=data
+       const res={
+        dayPictureUrl,
+        weather,
+        date
+       }
+    //    把数据交出去  await===>promise.then()
+       resolve(res) 
+
+    }else{
+        // 如果失败了
+      message.error('获取天气数据失败')
+    }
+
+    })
+
+   })
+    
+
+}
+

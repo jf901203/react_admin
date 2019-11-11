@@ -936,3 +936,10 @@
 1. componentWillMount()：在第一次render()之前调用一次 为第一次render()准备数据(同步的数据)
 2. componentDidMount()：在第一次render()之后调用一次 启动(发ajax请求/启动定时器的异步操作)异步任务 后面异步更新状态
 3. render():只要更新就会重新渲染
+
+
+## jsonp请求的接口函数  发送请求获取在线的天气预报
+
+1. npm install jsonp --save
+
+
