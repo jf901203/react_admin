@@ -121,11 +121,12 @@
 ## 引入组件库中的某一个组件
 
 1. import { Button } from 'antd-mobile'
+2. 实现按需打包
 
 # 自定义antd主题 antd就是用less写的 就是改变样式的颜色
 
-1. npm install --save less less-loader
-
+1. npm install --save less less-loader  安装了less就可以用less来编写css样式了
+ 
 	const { override, fixBabelImports,addLessLoader } = require('customize-cra');
 
     // 实现按需打包 antd组件：根据import进来的组件进行打包
@@ -303,6 +304,9 @@
 2. 关掉浏览器 关掉应用不会影响到数据的丢失
 
 
+## cookie也可以做持久化和免登入
+
+
 ## JSON.parse() 方法将数据转换为 JavaScript 对象
 
 1. text:必需，一个有效JSON格式的字符串。
@@ -319,7 +323,7 @@
 
 ## JSON.parse()
 
-1. 在接收服务器数据时一般是字符串 { "name":"runoob", "alexa":10000, "site":"www.runoob.com" } ===>一个json字符串对象
+1. 在接收服务器数据时一般是字符串 '{ "name":"runoob", "alexa":10000, "site":"www.runoob.com" }' ===>一个json字符串对象
 2. JSON.parse() 方法处理以上数据，将其转换为 JavaScript 对象
 3. var obj = JSON.parse('{ "name":"runoob", "alexa":10000, "site":"www.runoob.com" }') ===>将json字符串对象转换成js对象
 4. { "name":"runoob", "alexa":10000, "site":"www.runoob.com" } ===>js对象
@@ -473,6 +477,40 @@
 3. axios.post().then().catch()   xios.post()返回的是promise对象
 4. new Promise(()=>{}).then().catch()  new Promise 返回promise对象
 
+## 在开发环境中前后台分离的项目都会涉及到跨域的问题
+
+1. 协议不同
+2. 主域名不同
+3. 端口不同
+
+## 解决ajax跨域的请求问题(开发时)
+
+1. 办法：配置代理===>只能代理开发环境
+2. 编码:package.json===> proxy:'http://localhost:5000'
+3. 代理负责转发地址
+4. 转发的目标就是服务器应用的地址
+
+
+## 对代理的理解
+
+1. 代理是什么？===>具有特定功能的程序
+2. 运行在哪？
+
+    - 前台应用端
+    - 只能在开发时使用
+    
+3. 作用？===>解决开发时的ajax请求跨域问题
+
+   - 监视并拦截请求3000
+   - 转发到5000
+   
+4. 配置代理
+
+   - 告诉代理服务器一些信息：比如转发的目标地址】
+   - 开发环境：前端工程师
+   - 生产环境：后端工程师
+
+
 
 ## 项目是前后台分离的项目 前端请求后端的主域名
 
@@ -480,7 +518,15 @@
 2. 后台应用负责处理前台应用提交的请求 并给前台应用返回json数据
 3. 前台应用负责展现数据 与用户交互 与后台应用交互
 4. 前端的应用在3000的端口展示 后台的接口在5000的端口上面
-5. 会涉及到跨域的问题 3000的端口去请求5000的端口 端口号不一致造成了跨域
+5. 会涉及到的问题 3000的端口去请求5000的端口 端口号不一致造成了跨域
+
+
+## 开发环境服务器模块包含了代理服务器依赖
+
+1. webpack-dev-server webpack开发服务器
+2. http-proxy-middleware 
+3. express 前台服务器
+4. 启动代理服务器转发请求 "proxy": "http://localhost:5000"
 
 
 ## 解决跨域请求
@@ -561,7 +607,7 @@
 2. login({name,pwd})
 
 
-## async和await
+## async和await 直接得到的是promise的结果数据 没有then().catch()的回调了
 
 1. 作用
 2. 
@@ -596,15 +642,30 @@
 1. 理解：立即执行 完全执行完了才结束 不会放入到回调队列中
 2. 例子：数组相关的回调函数/Promise(()=>{})的excutor执行器函数
 3. Promise(同步执行的回调函数).then(异步执行的回调函数).catch(异步执行的回调函数)
-4. arr.find(执行器函数)
+4. arr.find(执行器函数) 找到数组中满足条件的一项
 5. arr.map(执行器函数)
 6. arr.filter(执行器函数)
+7. arr.findIndex(执行器函数) 找到数组中满足条件的下标
 
 ## 异步回调
 
 1. 理解：不会立即执行 会放入到回调队列中等待将来执行
-2. 例子：定时器回调/ajax回调/Promise的成功回调then()/失败的回调catch()
+2. 例子：定时器回调/ajax回调/Promise的成功回调then()/失败的回调catch()/DOM事件响应回调
 
+
+## 宏任务回调
+
+1. 定时器回调/ajax回调/DOM事件响应回调
+
+
+## 微任务回调
+
+1. Promise的成功回调then()/失败的回调catch()
+
+## JS执行时会区别这2个队列
+
+	1. JS引擎首先必须先执行所有的初始化同步任务代码
+	2. 每次准备取出第一个宏任务执行前, 都要将所有的微任务一个一个取出来执行
 
 ## Promise封装axios
 
@@ -687,10 +748,12 @@
 
 1. 模块类型设置为对象 对象中添加属性就可以存储数据了　
 
-　　　export default {
-			  user:{}
-		}
+	　　　	export default {
+				  user:{}
+			}
+
 2.　模块类型设置为数组　根据数据数组产生标签数组
+
 		const menuList=[
 		    {
 		        key:"/home",
@@ -852,3 +915,24 @@
 		    },[])
 		  
 		  }
+
+## bug
+
+1. 功能性bug===>功能有问题
+
+
+2. 异常性bug
+
+## 使用react-router-dom
+
+1. withRouter() 包装非路由组件 给组件传入history/location/match属性
+2. history:replace()/push()/goBack()
+3. match:param属性
+4. location:pathname属性
+
+
+## componentWillMount()与componentDidMount()
+
+1. componentWillMount()：在第一次render()之前调用一次 为第一次render()准备数据(同步的数据)
+2. componentDidMount()：在第一次render()之后调用一次 启动(发ajax请求/启动定时器的异步操作)异步任务 后面异步更新状态
+3. render():只要更新就会重新渲染
