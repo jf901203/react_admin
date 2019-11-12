@@ -48,7 +48,7 @@ import memery from '../../utils/memeryUtil'
         //  存到本地缓存
          store.saveUser(user)
          // 跳转到管理页面
-         this.props.history.replace('/')
+         this.props.history.replace('/home')
        }else{
         //  登入不成功
         message.error(result.msg)

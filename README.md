@@ -937,9 +937,51 @@
 2. componentDidMount()：在第一次render()之后调用一次 启动(发ajax请求/启动定时器的异步操作)异步任务 后面异步更新状态
 3. render():只要更新就会重新渲染
 
+## render() 渲染函数 需要渲染的数据必须在这个钩子中取出来
+
+1. 把取出来的数据用js代码的的形式写入到虚拟DOM中
+
 
 ## jsonp请求的接口函数  发送请求获取在线的天气预报
 
 1. npm install jsonp --save
 
+
+## ajax请求受同源策略限制不能进行跨域请求
+
+1. 但是script标签中的src属性却不受限制，jsonp就是利用这一特性来实现跨域请求。
+
+## jsonp解决ajax跨域的原理
+
+1. jsonp只能解决get类型的ajax请求跨域问题
+2. jsonp请求不是ajax请求 而是一般的get请求
+
+## 基本原理
+
+1. 浏览器端
+
+    - 动态生成script来请求后台接口(src就是接口的url)
+    - 定义好用于接收响应数据的函数，并将函数名通过请求参数提交给后台(callback=fn)
+2. 服务器端：
+
+    - 接收到请求处理产生结果数据后，返回一个函数调用的js代码 并将结果数据作为实参传入函数调用
+
+3. 浏览器端：
+
+    - 收到响应自动执行函数调用js代码 也就执行了以前定义好的回调函数，并得到了需要的结果数据
+
+
+## Date.now() 当前时间戳 转换成标准格式
+
+1. 转换成一个标准的时间格式
+2. npm install date-fns --save   
+3. npm install moment --save
+
+
+	import format from'date-fns/format'
+	export default function moment(date,formatStr='yyyy-MM-dd HH:mm:ss'){
+	
+	  return format(date, formatStr)
+	
+	}
 

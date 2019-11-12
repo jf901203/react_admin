@@ -6,6 +6,7 @@ import menuList from '../../menuConfig/menuList'
 import './LeftNav.less'
 import logo from './img/logo.jpg'
 
+
 const { SubMenu } = Menu;
 
  class LeftNav extends Component {
@@ -60,8 +61,8 @@ const { SubMenu } = Menu;
 
   // render()之前执行一次
   // 为 render()第一次渲染准备数据 (必须是同步的数据)
+  // 在render()渲染函数执行之前把 虚拟DOM对象创建好
   componentWillMount(){
-
     this.MenuNode=this.getMenuNode(menuList)
   }
   

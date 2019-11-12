@@ -47,10 +47,8 @@ export const reqWeather=(city)=>{
    return new Promise((resolve,reject)=>{
 
     const url=` http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
-    jsonp(url,{},(err,data)=>{
-        
+    jsonp(url,{},(err,data)=>{  
     //   如果成功的返回了数据 就把数据交出去
-    
     if(!err || data.status==='success'){
        const {dayPictureUrl,weather} =data.results[0].weather_data[0]
        const {date}=data
@@ -61,14 +59,11 @@ export const reqWeather=(city)=>{
        }
     //    把数据交出去  await===>promise.then()
        resolve(res) 
-
     }else{
         // 如果失败了
       message.error('获取天气数据失败')
     }
-
     })
-
    })
     
 
