@@ -28,6 +28,8 @@ export const reqUpdateUser=({_id,username,phone,email,role_id})=>ajax('/manage/u
 export const reqList=()=>ajax('/manage/user/list')
 // 删除用户接口函数
 export const reqDelete=(userId)=>ajax('/manage/user/delete',{userId},'POST')
+
+
 // 类别接口函数
 export const reqCategory=(parentId)=>ajax('/manage/category/list',{parentId})
 // 添加类别接口函数

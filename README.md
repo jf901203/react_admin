@@ -642,7 +642,7 @@
 1. 理解：立即执行 完全执行完了才结束 不会放入到回调队列中
 2. 例子：数组相关的回调函数/Promise(()=>{})的excutor执行器函数
 3. Promise(同步执行的回调函数).then(异步执行的回调函数).catch(异步执行的回调函数)
-4. arr.find(执行器函数) 找到数组中满足条件的一项
+4. arr.find(执行器函数) 找到数组中满足条件的一项 只能遍历一层 [{},{},{}]  [{},{children:[{},{}]}] 不合适
 5. arr.map(执行器函数)
 6. arr.filter(执行器函数)
 7. arr.findIndex(执行器函数) 找到数组中满足条件的下标
@@ -937,6 +937,16 @@
 2. componentDidMount()：在第一次render()之后调用一次 启动(发ajax请求/启动定时器的异步操作)异步任务 后面异步更新状态
 3. render():只要更新就会重新渲染
 
+
+## componentDidMount()
+
+1. render() 函数第一次执行之后
+2. 一般在这个钩子中执行异步操作 
+3. 发ajax请求
+4. 启动定时器
+5. 
+
+
 ## render() 渲染函数 需要渲染的数据必须在这个钩子中取出来
 
 1. 把取出来的数据用js代码的的形式写入到虚拟DOM中
@@ -985,3 +995,16 @@
 	
 	}
 
+
+##　函数组件 标签的属性都会传入到props对象中
+
+1. {...props}
+
+	import React, { Component } from 'react'
+	
+	import './linkButton.less'
+
+	export default function LinkButton (props){
+	
+	  return <button {...props} className="linkButton"></button>
+	}
