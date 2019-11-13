@@ -30,24 +30,23 @@ export const reqList=()=>ajax('/manage/user/list')
 export const reqDelete=(userId)=>ajax('/manage/user/delete',{userId},'POST')
 
 
-// 类别接口函数
+// 获取一级分类或二级分类的接口函数
 export const reqCategory=(parentId)=>ajax('/manage/category/list',{parentId})
-// 添加类别接口函数
-export const reqAddCate=(parentId,categoryName)=>ajax('/manage/category/add',{parentId,categoryName},'POST')
-// 更改类别接口函数
-export const reqUpdateCate=(categoryId,categoryName)=>ajax('/manage/category/update',{categoryId,categoryName},'POST')
+// 添加类别接口函数 参数的写法 两个参数
+export const reqAddCategory=(parentId,categoryName)=>ajax('/manage/category/add',{parentId,categoryName},'POST')
+// 更改类别接口函数 参数的写法 这个是一个参数 参数是一个对象
+export const reqUpdateCategorye=({categoryId,categoryName})=>ajax('/manage/category/update',{categoryId,categoryName},'POST')
+
 // 根据ID获取分类
 export const reqInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
-// 获取商品列表接口函数
+// 获取商品分页
 export const reqProduct=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
 
 
 // jsonp接口请求函数
 
 export const reqWeather=(city)=>{
-
    return new Promise((resolve,reject)=>{
-
     const url=` http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
     jsonp(url,{},(err,data)=>{  
     //   如果成功的返回了数据 就把数据交出去
