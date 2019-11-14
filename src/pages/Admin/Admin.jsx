@@ -25,14 +25,13 @@ export default class Admin extends Component {
   };
 
   onCollapse = collapsed => {
-    console.log(collapsed);
+   
     this.setState({ collapsed });
   };
 
   render() {
     
     const {user}=memery
-  
     if(!user || !user._id){
       return (
         <Redirect to="/login"></Redirect>

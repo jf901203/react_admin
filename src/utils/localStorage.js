@@ -7,7 +7,7 @@ const USER_KEY="user_key"
 export default {
 //  保存user对象 存一个json字符串
  saveUser(user){
-  return localStorage.setItem(USER_KEY,JSON.stringify(user));
+     localStorage.setItem(USER_KEY,JSON.stringify(user));
  },
 //  读取user对象 读一个js对象
  readerUser(){

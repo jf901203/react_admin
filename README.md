@@ -106,7 +106,7 @@
 2. npm install --save babel-plugin-import
 3. npm install --save customize-cra
 
-## 在根目录下(不是在src目录)定义加载配置的js模块 config-overrides.js
+## 在根目录下(不是在src目录)定义加载配置的js模块 config-overrides.js 根据import引进来的组件自动引进相对应的组件样式
 
 	const { override, fixBabelImports } = require('customize-cra');
 	
@@ -122,6 +122,7 @@
 
 1. import { Button } from 'antd-mobile'
 2. 实现按需打包
+3. 打包的时候就只打包Button组件
 
 # 自定义antd主题 antd就是用less写的 就是改变样式的颜色
 
@@ -178,6 +179,19 @@
 1. 会监听到所有的路由路劲与Route中的path进行匹配 匹配成功就显示
 2. 匹配不成功 就会执行 Redirect to=""
 
+
+          <Switch>
+              <Route path="/home" component={Home}></Route>
+              <Route path="/category" component={Category}></Route>
+              <Route path="/product" component={Product}></Route>
+              <Route path="/user" component={User}></Route>
+              <Route path="/role" component={Role}></Route>
+              <Route path="/pillar" component={Pillar}></Route>
+              <Route path="/line" component={Line}></Route>
+              <Route path="/pie" component={Pie}></Route>
+              <Redirect to="/home"/>
+            </Switch>
+
 ## 在事件回调中做跳转
 
 1. this.props.history.replace()
@@ -185,7 +199,7 @@
 
 ## 在render()函数中做跳转
 
-1. return <Redirect to=""></Redirect>
+     return <Redirect to=""></Redirect>
 
 
 ## 一级路由需要在路由外层加路由器
@@ -247,13 +261,13 @@
 8. 新组件是父组件 被包装的组件是子组件 父组件向子组件传递属性
 9. 高阶组件也是高级函数 接收的是组件函数 返回的是新的组件函数
 
-1. const  WrapLogin = Form.create()(Login); 接收一个组件做为函数的参数  Login是组件 <Login/>是组件标签 即组件对象
+1. const  WrapLogin = Form.create()(Login); 接收一个组件做为函数的参数  Login是组件    <Login/>是组件标签 即组件对象
 2. 返回一个包装有form表单的组件并向组件传递了this.props.form对象
 
 
 ## 创建组件的两种语法
 
-1. 工厂函数 返回一个对象
+1. 工厂函数 返回一个对象      function Login(props){return (div) }
 2. 类定义  类的本质是一个函数
 
 
@@ -350,7 +364,7 @@
 	export default {
 	//  保存user对象 存一个json字符串
 	 saveUser(user){
-	  return localStorage.setItem(USER_KEY,JSON.stringify(user));
+	       localStorage.setItem(USER_KEY,JSON.stringify(user));
 	 },
 	//  读取user对象 读一个js对象
 	 readerUser(){
@@ -375,7 +389,7 @@
 	export default {
 		
 		 saveUser(user){
-		  return store.set(USER_KEY)
+		    store.set(USER_KEY)
 		 },
 		
 		 readerUser(){
@@ -390,7 +404,7 @@
 		
 		}
 
-## 从内存中读取user 不是从localStorage中读
+## 从内存中读取user 不是从localStorage中读 在入口文件就开始读取存储的用户信息
 	
 	import store from './utils/localStorage'
 	import memery from './utils/memeryUtil'
@@ -448,8 +462,10 @@
 		      //   base=base.substr(0,base.lastIndexOf('&'))
 		      //   url+='?'+base
 		      // }
-		      promise=axios.get(url,{ //配置对象  params指定的query的参数
+		      promise=axios.get(url,{ //配置对象  params指定的query的参数 配置对象的属性名是一些固定的属性名
+
 		        params:data //指定请求的参数
+
 		      }
 		      )
 		    }else{
@@ -487,8 +503,9 @@
 
 1. 办法：配置代理===>只能代理开发环境
 2. 编码:package.json===> proxy:'http://localhost:5000'
-3. 代理负责转发地址
-4. 转发的目标就是服务器应用的地址
+3. 代理监听前端端口 3000
+4. 代理负责转发地址 5000
+5. 转发的目标就是服务器应用的地址
 
 
 ## 对代理的理解
@@ -506,7 +523,7 @@
    
 4. 配置代理
 
-   - 告诉代理服务器一些信息：比如转发的目标地址】
+   - 告诉代理服务器一些信息：比如转发的目标地址
    - 开发环境：前端工程师
    - 生产环境：后端工程师
 
@@ -517,8 +534,19 @@
 1. 前台应用与后台应用
 2. 后台应用负责处理前台应用提交的请求 并给前台应用返回json数据
 3. 前台应用负责展现数据 与用户交互 与后台应用交互
-4. 前端的应用在3000的端口展示 后台的接口在5000的端口上面
+4. 前端的应用在3000的端口展示数据 后台的数据在5000的端口上面
 5. 会涉及到的问题 3000的端口去请求5000的端口 端口号不一致造成了跨域
+
+## 数据在5000端口
+
+1. 5000端口处理前端3000端口发送过来的请求
+2. 返回json数据
+3. 5000端口下面才有对应的处理路由的程序
+
+## 前台在3000端口展现数据
+
+1. 前端3000端口展现的数据在5000端口上
+2. 向5000端口发送请求 获取数据
 
 
 ## 开发环境服务器模块包含了代理服务器依赖
@@ -527,6 +555,17 @@
 2. http-proxy-middleware 
 3. express 前台服务器
 4. 启动代理服务器转发请求 "proxy": "http://localhost:5000"
+
+
+## 前端应用有前端的服务器
+
+1. webpack-dev-server webpack
+2. 运行在前端服务器
+
+## 后端应用有后端应用的服务器
+
+1. express
+2. 运行在后台服务器
 
 
 ## 解决跨域请求
@@ -577,10 +616,16 @@
 4. postman可以看做活的接口文档
 
 
+## API分为接口API和文档API
+
+1. 文档API单纯是指语法 用法 语法糖 这个方法怎么用
+2. 接口API：请求的地址 请求的参数 请求的方式 响应的数据
+
+
 ## 暴露模块的方式
 
-1. 分别暴露
-2. 统一暴露
+1. 分别暴露 export function ajax(){}    import {ajax} from 
+2. 统一暴露 export defalut{ ajax(){} }  import xxx from 
 
 
 ## 分别暴露
@@ -731,8 +776,8 @@
 
 ## 路由组件拥有的三大属性 可以通过浏览器工具react-devtools可以查看 前提是路由组件
 
-1. this.props.history
-2. this.props.location
+1. this.props.history.replace()/push()
+2. this.props.location.pathname 获取到路由路劲
 3. this.props.match
 
 ##　一般组件想拥有路由组件的三个属性必须用到路由的withRouter()高阶组件函数
@@ -944,10 +989,11 @@
 2. 一般在这个钩子中执行异步操作 
 3. 发ajax请求
 4. 启动定时器
-5. 
+5. componentDidMount() 异步发送ajax 获取到数据 更新state状态 触发render()函数的重新渲染
+6. 在发送ajax异步函数之前 组件中必须有自身的渲染状态 发送请求 返回数据 才能更新这个状态
 
 
-## render() 渲染函数 需要渲染的数据必须在这个钩子中取出来
+## render() 渲染函数 需要渲染的数据必须在这个钩子中取出来 才能将数据展现到页面上
 
 1. 把取出来的数据用js代码的的形式写入到虚拟DOM中
 2. render()函数监视的是数据的变化
@@ -1000,7 +1046,7 @@
 
 ##　函数组件 标签的属性都会传入到props对象中
 
-1. {...props}
+1. {...props} 解构传进来的对象
 
 	import React, { Component } from 'react'
 	
@@ -1026,8 +1072,8 @@
 ## render()渲染函数中必须准备数据
 
 1. 数据来源组件传递
-2. 发送ajax请求获取
-3. 自己定义组件的state
+2. 发送ajax请求获取 ===>更新的state
+3. 自己定义组件的state === >组件自己的状态
 
 
 ## state 数据保存到数据中
@@ -1037,6 +1083,14 @@
 2. 初始化状态   ===>state={}  ===>初始化
 3. 更新状态     ===>this.setState({})  ===>改变状态的行为函数中
 4. 读取状态     ===>{}=>this.state ===>渲染函数中
+
+
+## 数据在组件状态中 只要状态发生改变  组件会重新渲染
+
+1. 设计状态 state={}
+2. 发送请求 ===>得到数据
+3. 更新状态 this.setState({},()=>{})
+4. 读取状态数据 ===>显示到界面
 
 
 ## this.setState({},()=>{})
@@ -1066,9 +1120,30 @@
 
 ## 在react中向事件回调函数中传递参数
 
-1. 一般事件函数  onClick={this.subHandle}
-2. 事件回调函数 onClick={()=>{this.sunHandle(food)}}
+1. 一般事件函数  onClick={this.subHandle}  渲染的时候就开始调用了
+2. 事件回调函数 onClick={()=>{this.sunHandle(food)}} 当点击的时候才开始调用
 
 ## 如何向事件回调函数中传递参数：先定义一个匿名函数 在函数中调用处理函数 并传入数据
 
 1. 事件回调函数 onClick={()=>{this.sunHandle(food)}}
+2. 实现向事件回调函数中传参数
+
+## this.setState({},callback)  callback状态更新之后立即执行
+
+1. setState()是一个异步的方法 当所有同步的代码都执行完毕之后才会执行异步的代码
+2. 回调函数会在状态更新且重新render()之后执行
+3. 相当于vue的$nextTick()
+
+## setState()不能立即获取最新的状态 因为setState()是异步更新状态的
+
+1. 等所有的同步代码执行完毕之后才会执行setState()方法中的代码
+
+
+## 印记中文
+
+1. https://docschina.org
+
+
+## 三步表达式
+
+1.  id==="0" ? '' :null   null===>表示不作任何操作
