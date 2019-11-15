@@ -20,7 +20,7 @@ const { SubMenu } = Menu;
                 <Icon type={item.type} />
                   {item.title}
               </Link>
-            </Menu.Item>
+          </Menu.Item>
         )
       }else{
         const path=this.props.location.pathname

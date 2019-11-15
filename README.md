@@ -1147,3 +1147,81 @@
 ## 三步表达式
 
 1.  id==="0" ? '' :null   null===>表示不作任何操作
+
+
+
+## 表单提交必须要有 form表单 用了antd中的form表单组件 
+
+1. 收集数据
+2. 表单收集的数据都保存在form对象上
+3. 清除输入数据
+
+
+## 使用PropTypes进行类型检查
+
+1. import PropTypes from 'prop-types'
+
+2. 声明接收的属性
+
+	static propTypes ={
+	  categoryName:PropTypes.string.isRequired
+	 }
+
+3. 读取接收的属性
+
+    const categoryName=this.props.categoryName
+
+
+## 数据可以保存在组件对象上 也可以保存在状态中
+
+1. this.categoryName=categoryName
+2. state={categoryName:categoryName}
+
+
+## 更新类
+
+1. 显示旧的类名
+2. 发送请求修改类名
+3. 重新显示列表
+
+
+## 父作用域与子作用域
+
+1. 父作用域看不见子作用域的数据
+2. 子作用域可以看见父作用域的数据
+
+## 父组件与子组件
+
+1. 父组件看不见子组件的数据
+2. 子组件也看不见父组件的数据
+3. 子组件需要父组件的数据 需要传递  父传子  props
+4. 父组件需要子组件的数据 需要传递  子传父  第三方库pubsub
+
+## 子组件传递数据给父组件
+
+1. pubsub-js 发布与订阅
+2. PubSub.publish('handle', data); ===>发布  发布消息之后全局组件都可以看得到
+3. PubSub.subscribe('handle', (msg,data)=>{})===>订阅
+
+## 下载与引入发布订阅 组件是兄弟组件或者隔代组件 是组件都合适
+
+1. npm install --save pubsub-js
+2. import PubSub from 'pubsub-js'
+
+
+## 不借用第三方库 子组件也可以向父组件传递数据 通过props
+
+1. 通过props传递函数属性 
+2. 子组件就可以调用父组件的函数 传递参数
+3. 参数就是子组件向父组件传递的数据
+
+
+## props传递属性
+
+1. 函数属性
+2. 非函数属性(一般属性) 父组件传递给子组件
+
+## props传递的属性类型决定了父组件传递数据给子组件还是子组件将数据传递给父组件
+
+1. props传递的是一般属性 数据传递的方向就是 父组件传递给子组件
+2. props传递的是函数属性 数据传递的方向就是 子组件传递给父组件

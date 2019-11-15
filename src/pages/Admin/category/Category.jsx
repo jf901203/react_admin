@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { Card,Button,Table,Icon,Modal,Input } from 'antd'
+import { Card,Button,Table,Icon,Modal, message } from 'antd'
 
 
 import LinkButton from '../../../components/link-button/LinkButton'
-import {reqCategory} from '../../../api/index'
-
+import {reqCategory,reqUpdateCategorye} from '../../../api/index'
+import AddForm from './add-form/AddForm'
+import UpdateForm from './update-form/updateForm'
+ 
 import './Category.less'
 export default class Category extends Component {
 
@@ -14,8 +16,8 @@ export default class Category extends Component {
     loading:false,
     parentName:'', // 一级分类的名称
     parentId:'0',
-    visible: 0, // 0 都不显示 1添加显示 2 更新显示
-
+    visible: 0 // 0 都不显示 1添加显示 2 更新显示
+  
   }
 
   // 显示指定一级分类对象的二级列表
@@ -78,25 +80,78 @@ backLink=()=>{
 
 }
 
-// 修改分类名称
 
-handleUpdate=()=>{
+// 获取子组件向父组件传递的form对象
+setForm=(form)=>{
+
+  this.form=form
+}
+
+
+//显示更新确认框
+showUpdate=(record)=>{
+ 
+  
+  this.category=record 
+ 
+
   this.setState({
-    visible: 2
+    visible: 2,
+    
   })
 
 }
 
 // 确认更新
-handleUpdateOk=()=>{
+handleUpdateOk= async()=>{
 
+// 发送请求修改类名
+const categoryId=this.category._id
+
+const categoryName=this.form.getFieldValue('categoryName')
+// 清除输入数据
+this.form.resetFields()
+const data={
+  categoryId,
+  categoryName
+}
+
+// 发送请求更新类名
+const res=await reqUpdateCategorye(data)
+
+if(res.status===0){
+  message.success('内容已经更新')
+  // 重新显示列表
+  this.getCategory()
+
+}else{
+  message.success('内容更新失败')
+}
+
+
+  // 隐藏确认框
   this.setState({
     visible: 0
   })
 }
 
-// 取消更新
-handleUpdateCancel=()=>{
+// 显示添加确认框
+showAdd=()=>{
+  this.setState({
+    visible: 1
+  })
+}
+//添加分类
+addCategory=()=>{
+  this.setState({
+    visible: 0
+  })
+}
+
+
+// 取消确认框
+handleCancel=()=>{
+  this.form.resetFields()
   this.setState({
     visible: 0
   })
@@ -105,52 +160,28 @@ handleUpdateCancel=()=>{
 
 column=()=>{
   
- return this.columns = [
-    {
-      title: '分类名称',
-      dataIndex: 'name',
-    },
-    {
-      title: '操作',
-      width:300,
-      render: (text, record, index) => (
-        <span>
-          <LinkButton onClick={this.handleUpdate}>修改分类</LinkButton>
-          {
-            this.state.parentId==='0'? <LinkButton onClick={()=>this.subCategory(record)}>查看子分类</LinkButton>:null
-          }
+  return this.columns = [
+     {
+       title: '分类名称',
+       dataIndex: 'name',
+     },
+     {
+       title: '操作',
+       width:300,
+       render: (text, record, index) => (
+         <span>
+           <LinkButton onClick={()=>{this.showUpdate(record)}}>修改分类</LinkButton>
+           {
+             this.state.parentId==='0'? <LinkButton onClick={()=>this.subCategory(record)}>查看子分类</LinkButton>:null
+           }
+          
          
-        
-        </span>
-      ),
-    }
-  ]
-
-}
-
-
-// 添加类
-
-addHandle=()=>{
-  this.setState({
-    visible: 1
-  })
-}
-//确认添加
-handleOk=()=>{
-  this.setState({
-    visible: 0
-  })
-}
-
-
-// 取消添加
-
-handleCancel=()=>{
-  this.setState({
-    visible: 0
-  })
-}
+         </span>
+       ),
+     }
+   ]
+ 
+ }
 
 //同步执行的钩子函数  在render()函数执行之前把数据准备好
 
@@ -167,6 +198,8 @@ componentDidMount(){
   render() {
   //  获取渲染的输数据/自己定义
   const {categorys,loading,subCategorys,parentId,parentName}=this.state
+  const categoryName=this.category|| {}
+
   const title=parentId==='0'?'一级分类列表':(
     <span>
       <LinkButton onClick={this.backLink}>一级分类列表</LinkButton>
@@ -175,7 +208,7 @@ componentDidMount(){
     </span>
   )
   const extra=(
-    <Button type="primary" onClick={this.addHandle}>
+    <Button type="primary" onClick={this.showAdd}>
       <Icon type="plus" />添加
     </Button>
   )
@@ -197,19 +230,22 @@ componentDidMount(){
         <Modal
           title="添加分类"
           visible={visible===1}
-          onOk={this.handleOk}
+          onOk={this.addCategory}
           onCancel={this.handleCancel}
           >
-          <Input placeholder="Basic usage" />
+          <AddForm></AddForm>
         </Modal>
 
         <Modal
           title="更新"
           visible={visible===2}
           onOk={this.handleUpdateOk}
-          onCancel={this.handleUpdateCancel}
+          onCancel={this.handleCancel}
           >
-          <Input placeholder="Basic usage" />
+
+         <UpdateForm categoryName={categoryName.name} setForm={(form)=>{this.setForm(form)}}></UpdateForm>
+
+
         </Modal>
 
 
