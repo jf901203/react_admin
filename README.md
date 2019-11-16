@@ -1153,7 +1153,8 @@
 
 1. 收集数据
 2. 表单收集的数据都保存在form对象上
-3. 清除输入数据
+3. 清除输入数据 
+4. 表单验证
 
 
 ## 使用PropTypes进行类型检查
@@ -1195,6 +1196,7 @@
 2. 子组件也看不见父组件的数据
 3. 子组件需要父组件的数据 需要传递  父传子  props
 4. 父组件需要子组件的数据 需要传递  子传父  第三方库pubsub
+5. 如果父组件中已经有数据了 直接传递给子组件 子组件就不需要再发送一次请求了
 
 ## 子组件传递数据给父组件
 
@@ -1223,7 +1225,62 @@
 ## props传递的属性类型决定了父组件传递数据给子组件还是子组件将数据传递给父组件
 
 1. props传递的是一般属性 数据传递的方向就是 父组件传递给子组件
-2. props传递的是函数属性 数据传递的方向就是 子组件传递给父组件、
+2. props传递的是函数属性 数据传递的方向就是 子组件传递给父组件
+
+## props传递的函数属性
+
+1. getForm={from=this.form=form}  ===>把form参数赋值给当前组件的form对象上
+2. getForm={(form)=>{return this.form=form}}
+3. getForm={(form)=>this.getForm(form)}  ===>在组件中准备this.getForm(form)这个函数
+
+
+## 组件之间的通传入值的时候需要声明接收
+
+1. import PropTypes from 'prop-types'
+2. 指定数据类型
+
+		static propTypes ={
+		  categoryName:PropTypes.string.isRequired,
+		  setForm:PropTypes.func.isRequired
+		 }
+
+3. 读取属性
+
+4. this.props.categoryName
+5. this.props.setForm(this.props.form) 调用函数属性
+
+## 读取更新后的数据
+
+1. 在render函数中读取
+2. 在setState({},callback) 在callback函数中读取
+3. setState()执行后不会立即改变状态
 
 
 
+# 前台分页与后台分页
+
+
+## 后台管理系统
+
+1. 用Table是非常常用的
+2. 就是数据的增删改查
+3. 从后台获取到的数据要保存到状态中 才好更新到界面上去显示
+
+
+## 获取数据==>显示数据==>更新数据
+
+1. 获取的数据要保存到组件的状态上   设计状态     state={}
+2. 读取状态的数据显示到界面上       异步获取数据 componentDidMount(){}
+3. 数据更新===>状态更新===>render函数从新渲染===>界面更新
+
+
+## 显示/隐藏功能
+
+1. 设计变量可以设计为一个布尔类型的变量
+2. 设计变量可以设计为number类型的变量
+
+
+## 读取数据
+
+1. const {}=this.state
+2. const {}=this.props

@@ -32,15 +32,31 @@ export const reqDelete=(userId)=>ajax('/manage/user/delete',{userId},'POST')
 
 // 获取一级分类或二级分类的接口函数
 export const reqCategory=(parentId)=>ajax('/manage/category/list',{parentId})
-// 添加类别接口函数 参数的写法 两个参数
-export const reqAddCategory=(parentId,categoryName)=>ajax('/manage/category/add',{parentId,categoryName},'POST')
+// 添加类别接口函数 参数的写法 两个参数  // 添加子分类
+export const reqAddCategory=({parentId,categoryName})=>ajax('/manage/category/add',{parentId,categoryName},'POST')
 // 更改类别接口函数 参数的写法 这个是一个参数 参数是一个对象
 export const reqUpdateCategorye=({categoryId,categoryName})=>ajax('/manage/category/update',{categoryId,categoryName},'POST')
 
-// 根据ID获取分类
+
+// 根据分类ID获取分类
 export const reqInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
-// 获取商品分页
+// 获取商品分页列表
 export const reqProduct=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
+
+// 根据ID/Name搜索产品分页列表
+
+export const reqSearch=({pageNum,pageSize,productName,productDesc })=>ajax('/manage/product/search',{pageNum,pageSize,productName,productDesc })
+
+// 添加商品
+
+export const reqAddProduct=({categoryId,pCategoryId,name,desc,price,detail,imgs})=>ajax('/manage/product/add',{categoryId,pCategoryId,name,desc,price,detail,imgs},'POST')
+
+// 更新商品
+
+export const reqUpdateProduct=({categoryId,pCategoryId,name,desc,price,detail,imgs})=>ajax('/manage/product/update',{categoryId,pCategoryId,name,desc,price,detail,imgs},'POST')
+// 对商品进行上架/下架处理
+export const reqUpdateStatus=({productId,status})=>ajax('/manage/product/updateStatus',{productId,status},'POST')
+
 
 
 // jsonp接口请求函数

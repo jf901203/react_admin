@@ -2,64 +2,54 @@
 // 添加分类
 import React, { Component } from 'react'
 import { Form,Input,Select, message} from 'antd';
+import PropTypes from 'prop-types'
 
-
-import {reqCategory} from '../../../../api/index'
 const { Option } = Select
 class AddForm extends Component {
-
-  state={
-    categorys:[]
-  }
-
-  // 发送请求获取一级分类
-
-  getCategoty= async()=>{
-
-   const res=await reqCategory('0')
-
-   if(res.status===0){
-
-     const categorys=res.data
-     
-     this.setState({categorys})
-   }else{
-     message.error('请求错误!!!')
+  static propTypes ={
+    setForm:PropTypes.func.isRequired,
+    parentId:PropTypes.string.isRequired,
+    categorys:PropTypes.array.isRequired
    }
+  
+  componentWillMount(){
+    this.props.setForm(this.props.form)
   }
- 
- 
-
   // 发送异步请求获取数据
-
-  componentDidMount(){
-    this.getCategoty()
-  }
-
   render() {
-
+    // 在这里的数据说明已经是更新后的数据了
     const { getFieldDecorator } = this.props.form;
-    const categorys=this.state.categorys
+    const {parentId,categorys}=this.props
+    
     return (
       <Form layout="horizontal">
+        <p>所属分类:</p>
         <Form.Item>
           {getFieldDecorator('parentId', {
               rules: [{ required: true, message: 'Please select your gender!' }],
-              initialValue:"0"
+              initialValue:parentId
             })(
               <Select
                 placeholder="Select a option and change input text above"
               >
                 <Option value="0">一级分类</Option>
+                {
+                  categorys.map((item)=>{
+                    return(
+                    <Option value={item._id} key={item._id}>{item.name}</Option>
+                    )
+                  })
+                }
               </Select>,
             )}
         </Form.Item>
+        <p>分类名称:</p>
         <Form.Item>
           {getFieldDecorator('categoryName', {
               rules: [{ required: true, message: '请求输入分类名称!' }],
             })(
               <Input
-                placeholder="Username"
+                placeholder="请输入分类名称"
               />
             )}
         </Form.Item> 
