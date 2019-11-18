@@ -41,11 +41,14 @@ export const reqUpdateCategorye=({categoryId,categoryName})=>ajax('/manage/categ
 // 根据分类ID获取分类
 export const reqInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
 // 获取商品分页列表
-export const reqProduct=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
+export const reqProduct=({pageNum,pageSize})=>ajax('/manage/product/list',{pageNum,pageSize})
 
-// 根据ID/Name搜索产品分页列表
+// 根据名称搜索产品分页列表
+export const reqSearchName=({pageNum,pageSize,productName})=>ajax('/manage/product/search',{pageNum,pageSize,productName })
 
-export const reqSearch=({pageNum,pageSize,productName,productDesc })=>ajax('/manage/product/search',{pageNum,pageSize,productName,productDesc })
+// 根据产品描述(关键字)搜索产品分页列表
+export const reqSearchDesc=({pageNum,pageSize,productDesc})=>ajax('/manage/product/search',{pageNum,pageSize,productDesc })
+
 
 // 添加商品
 

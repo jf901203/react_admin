@@ -1,7 +1,7 @@
 
 // 添加分类
 import React, { Component } from 'react'
-import { Form,Input,Select, message} from 'antd';
+import { Form,Input,Select} from 'antd';
 import PropTypes from 'prop-types'
 
 const { Option } = Select

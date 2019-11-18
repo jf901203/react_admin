@@ -30,7 +30,7 @@ export default class Admin extends Component {
   };
 
   render() {
-    
+    // 判断是否有用户信息 没有就让用户去登录界面
     const {user}=memery
     if(!user || !user._id){
       return (

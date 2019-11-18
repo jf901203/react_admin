@@ -38,6 +38,7 @@ import memery from '../../utils/memeryUtil'
        
        const {username,password} =values
       //  await===promise.then(data) <===resolve(data)
+      // 登入成功 跳转到管理界面
        const result=await reqLogin(username,password)
        if(result.status===0){
          //  登入成功
