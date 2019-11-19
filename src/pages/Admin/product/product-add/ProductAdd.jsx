@@ -66,42 +66,67 @@ this.setState({
       callback('价格不能小于0')
     }
   }
-//  级联选择
-  onChange=(value)=> {
-    console.log(value);
-  }
+
 
 /*
   处理请求
 */ 
 
-getCategory= async ()=>{
-  
-  const res=await reqCategory('0')
-    
+getCategory= async (parentId)=>{
+  const res=await reqCategory(parentId)
   if(res.status===0){
     const categorys=res.data
-    this.initOptions(categorys)
+    if(parentId==='0'){
+      // 如果是一级分类
+      this.initOptions(categorys)
+    }else{
+      // 返回二级列表数据
+     return  categorys
+    }
   }else{
-
    message.error('请求错误')
-
   }
    
 }
 
 
 /*
-
 组件钩子
-
 */
 
 componentDidMount(){
-
-  this.getCategory()
-
+  this.getCategory('0')
 }
+
+loadData = async selectedOptions => {
+  // 获取option对象 
+  const targetOption = selectedOptions[0];
+  targetOption.loading = true;
+
+  const subCategorys= await this.getCategory(targetOption.value)
+
+  if(subCategorys && subCategorys.length > 0){
+    targetOption.loading = false
+    const childrenOption= subCategorys.map((item)=>({
+        label: item.name,
+        value: item._id,
+        isLeaf:true
+    }))
+    targetOption.children = childrenOption
+  }else{
+
+    targetOption.loading = false
+    // 没有二级列表了 就是叶子了
+    targetOption.isLeaf=true
+
+  }
+
+    this.setState({
+      options: [...this.state.options],
+    });
+
+  }
+
 
 
   render() {
@@ -154,12 +179,11 @@ componentDidMount(){
 
          
           <Form.Item label="商品分类">
-            
-          <Cascader
-              options={options}
-              onChange={this.onChange}
-              changeOnSelect
-            />
+            <Cascader
+                options={options}
+                loadData={this.loadData}
+                changeOnSelect
+              />
           </Form.Item>
           <Form.Item label="图片上传">
           <Upload>
