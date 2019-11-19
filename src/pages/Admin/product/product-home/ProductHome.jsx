@@ -81,7 +81,9 @@ export default class ProductHome extends Component {
       }
   ],
   total:0,
-  loading:false
+  loading:false,
+  searchType:'productName',
+  searchName:''
   }
 
 // 初始化列的字段
@@ -143,7 +145,6 @@ getProducts= async(pageNum)=>{
    const res= await reqProduct(pageNum,PAGE_SIZE)
   //  请求成功
    if(res.status===0){
-    
     // 隐藏loading
     this.setState({
       loading:false
@@ -156,6 +157,9 @@ getProducts= async(pageNum)=>{
 
 }
 
+addProduct=()=>{
+  this.props.history.push('/product/productadd')
+}
 
 componentWillMount(){
   this.initColumns()
@@ -165,14 +169,19 @@ componentDidMount(){
   this.getProducts('1')
 }
   render() {
+
+    const {searchType,searchName}=this.state
     const title=(
       <span>
-        <Select value="1">
-          <Option value="1">按名称搜索</Option>
-          <Option value="2">商品名称</Option>
+        <Select value={searchType} onChange={value=>this.setState({searchType:value})}>
+          <Option value="productName">按名称搜索</Option>
+          <Option value="productDesc">按描述搜索</Option>
         </Select>
-
-        <Input placeholder="关键字" style={{width:150,margin:'0 15px'}}/>
+        <Input placeholder="关键字" 
+          style={{width:150,margin:'0 15px'}} 
+          value={searchName}
+          onChange={e=>this.setState({searchName:e.target.value})}
+        />
         <Button type="primary">提交</Button>
       </span>
 
@@ -181,7 +190,7 @@ componentDidMount(){
 
 
     const extra=(
-       <Button type="primary">
+       <Button type="primary" onClick={this.addProduct}>
          <Icon type="plus"></Icon>
          添加
        </Button>

@@ -1315,9 +1315,16 @@
 ## select 标签的值与选项的标签的值相匹配才能显示
 
       <Select value="1">
-        <Option value="1">1</Option>
-        <Option value="2">2</Option>
+        <Option value="1">战三</Option>
+        <Option value="2">李四</Option>
       </Select>
+
+
+## Option用户看到的数据不一定是收集的数据
+
+1. <Option value="1">1</Option>
+2. 收集的Option的value值
+3. 用户看到的是Option显示的文本
 
 
 ## 组件自身
@@ -1330,3 +1337,36 @@
 
 1. onChange:(page)=>{this.getProducts(page)} 一般写法
 2. onChange:this.getProducts 简写
+
+
+
+## 受控组件与非受控组件 自动收集数据
+
+## 受控组件 
+
+1. 定义初始化状态 name:''
+2. 给受控标签绑定监听onChang事件
+3. 改变状态
+4. handle=(e)=>{this.setState({name:e.target.value})}
+
+
+## 非受控组件
+
+1. 不需要初始化状态
+2.  ref={this.input} 绑定ref
+3.  this.input.current.value 获取表单的值
+
+        <Select value={searchType} onChange={value=>this.setState({searchType:value})}>
+          <Option value="productName">按名称搜索</Option>
+          <Option value="productDesc">按描述搜索</Option>
+        </Select>
+
+
+
+## event事件对象
+
+1. 代表着发生事件的对象
+
+## 对象内部的属性是没有前后顺序的
+
+

@@ -40,14 +40,19 @@ export const reqUpdateCategorye=({categoryId,categoryName})=>ajax('/manage/categ
 
 // 根据分类ID获取分类
 export const reqInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
+
 // 获取商品分页列表
 export const reqProduct=({pageNum,pageSize})=>ajax('/manage/product/list',{pageNum,pageSize})
 
-// 根据名称搜索产品分页列表
-export const reqSearchName=({pageNum,pageSize,productName})=>ajax('/manage/product/search',{pageNum,pageSize,productName })
+// 根据名称搜索产品分页列表 
+// searchType：productName/productDesc 一个变量作为对象的属性值[searchType]
+// 一个接口函数 搞定两种搜索的请求
+export const reqSearchName=({pageNum,pageSize,searchType,searchName})=>ajax('/manage/product/search',{
+   pageNum,
+   pageSize,
+   [searchType]:searchName
+})
 
-// 根据产品描述(关键字)搜索产品分页列表
-export const reqSearchDesc=({pageNum,pageSize,productDesc})=>ajax('/manage/product/search',{pageNum,pageSize,productDesc })
 
 
 // 添加商品
