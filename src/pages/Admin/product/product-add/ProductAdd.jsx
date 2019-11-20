@@ -10,6 +10,7 @@ import { Card,
 } from 'antd';
 
 import {reqCategory} from '../../../../api'
+import PicturesWall from './PicturesWall'
 
 import LinkButton from '../../../../components/link-button/LinkButton'
 import './add.less'
@@ -53,7 +54,7 @@ this.setState({
   submit=()=>{
     this.props.form.validateFields((errors, values)=>{
       if(!errors){
-        alert(values)
+       console.log(values)
       }
     })
   }
@@ -136,7 +137,7 @@ loadData = async selectedOptions => {
     const title=(
       <span>
         
-        <LinkButton>
+        <LinkButton onClick={()=>{this.props.history.goBack()}}>
            <Icon type="arrow-left" />
         </LinkButton>
         <span>添加商品</span>
@@ -145,7 +146,7 @@ loadData = async selectedOptions => {
     return (
       <div className="add">
         <Card title={title} style={{ width: '100%' }}>
-        <Form labelCol={{ span: 3 }} wrapperCol={{ span: 8}}>
+        <Form labelCol={{ span: 3 }} wrapperCol={{ span:8}}>
           
 
           <Form.Item label="商品名称">
@@ -179,18 +180,23 @@ loadData = async selectedOptions => {
 
          
           <Form.Item label="商品分类">
-            <Cascader
-                options={options}
-                loadData={this.loadData}
-                changeOnSelect
-              />
+
+          {getFieldDecorator('categoryIds', {
+              initialValue:[],
+              rules: [{ required: true, message: '商品分类' }],
+            })( <Cascader
+              options={options}
+              loadData={this.loadData}
+              changeOnSelect
+              placeholder="商品分类"
+            />)}
+
+           
           </Form.Item>
           <Form.Item label="图片上传">
-          <Upload>
-            
-          </Upload>
+             <PicturesWall></PicturesWall>
           </Form.Item>
-          <Form.Item label="图片上传">
+          <Form.Item>
             <Button type="primary" onClick={this.submit}>提交</Button>
           </Form.Item>
         </Form>
