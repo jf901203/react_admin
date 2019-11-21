@@ -3,7 +3,6 @@ import { Card,
   Form, 
   Input, 
   Button, 
-  Upload, 
   Icon, 
   message,
   Cascader 
@@ -18,6 +17,9 @@ import './add.less'
 const { TextArea } = Input
 
  class ProductAdd extends Component {
+
+
+  
 
   /*组件自身的诸状态*/
 
@@ -54,7 +56,8 @@ this.setState({
   submit=()=>{
     this.props.form.validateFields((errors, values)=>{
       if(!errors){
-       console.log(values)
+       const imgs=this.PicturesWall.getImgs
+       console.log(imgs)
       }
     })
   }
@@ -194,7 +197,7 @@ loadData = async selectedOptions => {
            
           </Form.Item>
           <Form.Item label="图片上传">
-             <PicturesWall></PicturesWall>
+             <PicturesWall ref={(PicturesWall)=>{this.PicturesWall=PicturesWall}}></PicturesWall>
           </Form.Item>
           <Form.Item>
             <Button type="primary" onClick={this.submit}>提交</Button>

@@ -1397,3 +1397,56 @@
 
 
 ## 删除图片的操作
+
+
+## 接口请求参数要看清楚接收的参数类型 字符串或数组或数字
+
+    |参数		   |是否必选 |类型      |说明
+    |categoryId    |Y       |string   |分类ID
+    |pCategoryId   |Y       |string   |父分类ID
+    |name          |Y       |string   |商品名称
+    |desc          |N       |string   |商品描述
+    |price         |N       |string   |商品价格
+    |detail        |N       |string   |商品详情
+    |imgs          |N       |array    |商品图片名数组
+
+
+## 父子组件对象的函数属性数据的传递
+
+1. 子组件对象调用父组件对象的方法：将父组件的方法以函数属性的形式传递给子组件
+2. 父组件对象调用子组件对象的方法：ref 获取到子组件对象 再调用子组件的方法
+
+
+## 父子组件的关系的确立
+
+1. A组件中有B组件的标签
+2. A组件就叫父组件  A组件中有B组件标签 才能传标签属性
+3. B组件就叫子组件
+4. 标签对象就是组件对象
+5. ref可以获取到标签对象
+
+
+## 获取到一个组件对象
+
+1. ref='node'
+2. this.refs.node 将指向 DOM 节点
+3. ref={(PicturesWall)=>{this.PicturesWall=PicturesWall}}
+4. this.PicturesWall.getImgs() 执行组件对象的方法
+
+
+## 在constructor函数中创建ref对象
+       //创建ref
+		class MyComponent extends React.Component {
+			  constructor(props) {
+			    super(props);
+			    this.myRef = React.createRef();
+			  }
+			  render() {
+			    return <div ref={this.myRef} />;
+			  }
+			}
+       
+         //访问 Refs
+         this.myRef.current;
+         
+         <CustomTextInput ref={this.textInput} />

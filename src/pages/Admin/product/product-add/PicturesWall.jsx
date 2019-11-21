@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon, Modal, message } from 'antd';
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -19,15 +19,16 @@ export default class PicturesWall extends React.Component {
   state = {
     previewVisible: false,
     previewImage: '',
-    fileList: [],
+    fileList: [],  //前端显示的数据
   };
 
-  /*组件自生的事件回调 */ 
+  /*组件自身的事件回调 */ 
   handleCancel = () => this.setState({ previewVisible: false });
 
   handlePreview = async file => {
      
     if (!file.url && !file.preview) {
+      // Base64的一个串
       file.preview = await getBase64(file.originFileObj);
     }
 
@@ -40,13 +41,46 @@ export default class PicturesWall extends React.Component {
 
   // fileList 所有已上传图片对象的数组 file：当前操作的图片对象
   handleChange = ({ fileList,file }) => {
-    console.log(file.response)
-    console.log(fileList)
+
+    if(file.status==='done'){
+        message.success('上传成功')
+        const res=file.response
+       if(res.status===0){
+          const {name,url} =res.data
+          // 上传后的数据 赋值到前台显示
+          const list=fileList[fileList.length-1]
+          list.name=name
+          list.url=url
+       }
+      
+    }
     this.setState({fileList})
   };
 
-  /*状态更新 render()会触发*/ 
+// 前台删除图片的同时 要删除后台的图片
+  handleRemove=(file)=>{
+    
+    if(file.status==='done'){
+      const res=file.response
+      if(res.status===0){
+        const {name}=res.data
+      }
+    }
+  
 
+  }
+
+
+  // 自定函数 给父组件调用的方法
+
+  getImgs=()=>{
+  
+     const {fileList}=this.state
+     return fileList.map(item=>item.name)
+
+  }
+
+  /*状态更新 render()会触发*/ 
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
     const uploadButton = (
@@ -61,10 +95,11 @@ export default class PicturesWall extends React.Component {
           action="/manage/img/upload" //提交图片的地址
           listType="picture-card"
           accept="image/*" //只接受图片格式
-          name="image"  //	发到后台的文件参数名
+          name="image"  // 发送到后台的name参数 
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
+          onRemove={this.handleRemove}
         >
           {fileList.length >= 8 ? null : uploadButton}
         </Upload>
