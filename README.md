@@ -1426,6 +1426,9 @@
 5. ref可以获取到标签对象
 
 
+# 标签对象就是组件对象 组件对象就是实例对象
+
+
 ## 获取到一个组件对象
 
 1. ref='node'
@@ -1450,3 +1453,22 @@
          this.myRef.current;
          
          <CustomTextInput ref={this.textInput} />
+
+## 父组件调用子组件对象的方法：使用ref技术
+
+1. 创建ref容器：this.pw=React.createRef()  在构造器中创建的
+2. 将ref容器交给需要获取的标签元素:<PictureWall ref={this.pw}/> 自动将标签对象添加为pw对象的current属性
+3. 通过ref容器读取标签元素:this.pw.current
+
+
+##　富文本编译器  Rich Text Editor
+
+1. 可以生成一定网页格式的样式的文本
+2. 可以生成一些链接
+3. 可以生成图片
+4. 可以进行特定格式的处理
+
+## 下载富文本库
+
+1. npm install --save react-draft-wysiwyg draft-js
+2. npm draftjs-to-html --save

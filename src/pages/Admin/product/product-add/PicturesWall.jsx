@@ -1,8 +1,10 @@
 //用于图片上传的组件
 
-import React, { Component } from 'react'
+import React  from 'react'
 
 import { Upload, Icon, Modal, message } from 'antd';
+
+import {reqDeleteImg} from '../../../../api'
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -41,7 +43,7 @@ export default class PicturesWall extends React.Component {
 
   // fileList 所有已上传图片对象的数组 file：当前操作的图片对象
   handleChange = ({ fileList,file }) => {
-
+    // 上传图片发送的是ajax请求 服务器会返回一些信息
     if(file.status==='done'){
         message.success('上传成功')
         const res=file.response
@@ -58,12 +60,15 @@ export default class PicturesWall extends React.Component {
   };
 
 // 前台删除图片的同时 要删除后台的图片
-  handleRemove=(file)=>{
-    
+  handleRemove=async (file)=>{
     if(file.status==='done'){
       const res=file.response
       if(res.status===0){
         const {name}=res.data
+        const result = await reqDeleteImg(name)
+         if(result.status===0){
+           message.success('删除成功')
+         }
       }
     }
   
@@ -72,12 +77,9 @@ export default class PicturesWall extends React.Component {
 
 
   // 自定函数 给父组件调用的方法
-
   getImgs=()=>{
-  
      const {fileList}=this.state
      return fileList.map(item=>item.name)
-
   }
 
   /*状态更新 render()会触发*/ 
