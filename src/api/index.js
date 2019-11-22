@@ -55,26 +55,21 @@ export const reqSearchName=({pageNum,pageSize,searchType,searchName})=>ajax('/ma
 
 
 
-// 添加商品
+// 添加商品  更新商品的差别就是有没有商品的_id
 
-export const reqAddProduct=({categoryId,pCategoryId,name,desc,price,detail,imgs})=>ajax('/manage/product/add',{categoryId,pCategoryId,name,desc,price,detail,imgs},'POST')
+export const reqAddProduct=(product)=>ajax('/manage/product/add',{product},'POST')
 
 // 更新商品
-
-export const reqUpdateProduct=({categoryId,pCategoryId,name,desc,price,detail,imgs})=>ajax('/manage/product/update',{categoryId,pCategoryId,name,desc,price,detail,imgs},'POST')
+export const reqUpdateProduct=({_id,categoryId,pCategoryId,name,desc,price,detail,imgs})=>ajax('/manage/product/update',{_id,categoryId,pCategoryId,name,desc,price,detail,imgs},'POST')
 // 对商品进行上架/下架处理
 export const reqUpdateStatus=({productId,status})=>ajax('/manage/product/updateStatus',{productId,status},'POST')
 
 
 // 删除图片的接口函数
 
-
 export const reqDeleteImg=(name)=>ajax('/manage/product/updateStatus',{name},'POST')
 
-
-
 // jsonp接口请求函数
-
 export const reqWeather=(city)=>{
    return new Promise((resolve,reject)=>{
     const url=` http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`

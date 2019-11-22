@@ -1411,6 +1411,24 @@
     |imgs          |N       |array    |商品图片名数组
 
 
+## 最主要是收集接口参数数据的过程
+
+1. 收集的数据的数据结构
+2. 字符串
+3. 数组
+4. 对象
+5. 数字
+6. 布尔
+
+
+
+## 添加商品
+
+1. 收集数据 封装成参数对象 就传一个参数
+2. 调用接口请求函数去往数据库添加数据
+3. 根据返回结果提示
+
+
 ## 父子组件对象的函数属性数据的传递
 
 1. 子组件对象调用父组件对象的方法：将父组件的方法以函数属性的形式传递给子组件
@@ -1470,5 +1488,9 @@
 
 ## 下载富文本库
 
-1. npm install --save react-draft-wysiwyg draft-js
+1. npm install --save react-draft-wysiwyg draft-js html-to-draftjs draftjs-to-html
 2. npm draftjs-to-html --save
+3. import { EditorState, convertToRaw } from 'draft-js';
+4. import { Editor } from 'react-draft-wysiwyg';
+5. import draftToHtml from 'draftjs-to-html';
+6. import htmlToDraft from 'html-to-draftjs';

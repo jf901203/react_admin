@@ -10,6 +10,7 @@ import { Card,
 
 import {reqCategory} from '../../../../api'
 import PicturesWall from './PicturesWall'
+import RichTextEditor from './RichTextEditor'
 
 import LinkButton from '../../../../components/link-button/LinkButton'
 import './add.less'
@@ -19,6 +20,11 @@ const { TextArea } = Input
  class ProductAdd extends Component {
 
 
+  constructor(props){
+    super(props)
+    this.Editor=React.createRef()
+
+  }
   
 
   /*组件自身的诸状态*/
@@ -56,8 +62,10 @@ this.setState({
   submit=()=>{
     this.props.form.validateFields((errors, values)=>{
       if(!errors){
-       const imgs=this.PicturesWall.getImgs
-       console.log(imgs)
+       const {categoryIds} =values
+       const imgs=this.PicturesWall.getImgs()
+       const detail=this.Editor.current.getEditor()
+       
       }
     })
   }
@@ -150,8 +158,6 @@ loadData = async selectedOptions => {
       <div className="add">
         <Card title={title} style={{ width: '100%' }}>
         <Form labelCol={{ span: 3 }} wrapperCol={{ span:8}}>
-          
-
           <Form.Item label="商品名称">
             {getFieldDecorator('name', {
               rules: [{ required: true, message: '请输入商品名称' }],
@@ -199,6 +205,10 @@ loadData = async selectedOptions => {
           <Form.Item label="图片上传">
              <PicturesWall ref={(PicturesWall)=>{this.PicturesWall=PicturesWall}}></PicturesWall>
           </Form.Item>
+          <Form.Item label="商品详情" labelCol={{ span: 3 }}  wrapperCol={{ span:20}}>
+              <RichTextEditor ref={this.Editor}></RichTextEditor>
+          </Form.Item>
+          
           <Form.Item>
             <Button type="primary" onClick={this.submit}>提交</Button>
           </Form.Item>
