@@ -1411,6 +1411,23 @@
     |imgs          |N       |array    |商品图片名数组
 
 
+### 参数类型:
+    |参数		       |是否必选 |类型     |说明 
+    |_id           |Y       |string   |商品ID  
+    |categoryId    |Y       |string   |分类ID
+    |pCategoryId   |Y       |string   |父分类ID
+    |name          |Y       |string   |商品名称
+    |desc          |N       |string   |商品描述
+    |price         |N       |string   |商品价格
+    |detail        |N       |string   |商品详情
+    |imgs          |N       |array   |商品图片名数组
+
+
+## 添加和更新的接口可以合并 更新的参数会有id
+
+1. export const reqAddProduct=(product)=>ajax('/manage/product/'+ (product._id?'update':'add'),product,'POST')
+
+
 ## 最主要是收集接口参数数据的过程
 
 1. 收集的数据的数据结构

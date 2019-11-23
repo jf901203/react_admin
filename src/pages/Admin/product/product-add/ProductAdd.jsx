@@ -8,7 +8,7 @@ import { Card,
   Cascader 
 } from 'antd';
 
-import {reqCategory} from '../../../../api'
+import {reqCategory,reqAddProduct} from '../../../../api'
 import PicturesWall from './PicturesWall'
 import RichTextEditor from './RichTextEditor'
 
@@ -60,12 +60,43 @@ this.setState({
 
 */ 
   submit=()=>{
-    this.props.form.validateFields((errors, values)=>{
+    this.props.form.validateFields( async(errors, values)=>{
       if(!errors){
-       const {categoryIds} =values
+       const {categoryIds,name,price,desc} = values
        const imgs=this.PicturesWall.getImgs()
        const detail=this.Editor.current.getEditor()
-       
+       let categoryId
+       let pCategoryId
+       if(categoryIds.length===1){
+        pCategoryId='0'
+        categoryId=categoryIds[0]
+       }else{
+        
+        pCategoryId=categoryIds[0]
+        categoryId=categoryIds[1]
+
+       }
+
+       const product={
+        name,
+        price,
+        detail,
+        imgs,
+        desc,
+        categoryId,
+        pCategoryId
+       }
+
+     const res= await reqAddProduct(product)
+
+  
+     if(res.status===0){
+       message.success('添加成功')
+       this.props.history.goBack()
+     }else{
+       message.success('上传失败')
+     }
+
       }
     })
   }
@@ -178,7 +209,7 @@ loadData = async selectedOptions => {
           
           
             <Form.Item label="商品描述">
-            {getFieldDecorator('detail', {
+            {getFieldDecorator('desc', {
               rules: [{ required: true, message: '商品描述' }],
             })(<TextArea
               placeholder="商品描述"

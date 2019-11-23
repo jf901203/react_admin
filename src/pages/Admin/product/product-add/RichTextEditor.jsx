@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -18,7 +18,7 @@ export default class RichTextEditor extends Component {
       editorState,
     });
   };
-
+//  转成html格式的数据
   getEditor=()=>{
     return draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
   }
@@ -30,14 +30,12 @@ uploadImageCallBack=(file) =>{
       (resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/manage/img/upload');
-      
         const data = new FormData();
         data.append('image', file);
         xhr.send(data);
         xhr.addEventListener('load', () => {
           const response = JSON.parse(xhr.responseText);
           const url=response.data.url //得到图片地址
-
           console.log(response)
           resolve({data: {link: url}})
           

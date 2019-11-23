@@ -42,7 +42,7 @@ export const reqUpdateCategorye=({categoryId,categoryName})=>ajax('/manage/categ
 export const reqInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
 
 // 获取商品分页列表
-export const reqProduct=({pageNum,pageSize})=>ajax('/manage/product/list',{pageNum,pageSize})
+export const reqProduct=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
 
 // 根据名称搜索产品分页列表 
 // searchType：productName/productDesc 一个变量作为对象的属性值[searchType]
@@ -57,7 +57,7 @@ export const reqSearchName=({pageNum,pageSize,searchType,searchName})=>ajax('/ma
 
 // 添加商品  更新商品的差别就是有没有商品的_id
 
-export const reqAddProduct=(product)=>ajax('/manage/product/add',{product},'POST')
+export const reqAddProduct=(product)=>ajax('/manage/product/add',product,'POST')
 
 // 更新商品
 export const reqUpdateProduct=({_id,categoryId,pCategoryId,name,desc,price,detail,imgs})=>ajax('/manage/product/update',{_id,categoryId,pCategoryId,name,desc,price,detail,imgs},'POST')
