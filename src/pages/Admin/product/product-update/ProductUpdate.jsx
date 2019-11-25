@@ -11,26 +11,39 @@ import {
 
 import LinkButton from '../../../../components/link-button/LinkButton'
 import {reqCategory,reqAddProduct} from '../../../../api'
+import PicturesWall from './picturesWall'
+
+
 const { TextArea } = Input;
 
 export default class ProductUpdate extends Component {
  
   state={
-    product:null,
     options:[]
   }
  
-
+// 数据改变时发送请求
   loadData = async selectedOptions => {
     const targetOption = selectedOptions[0];
     targetOption.loading = true;
-
     const res= await reqCategory(targetOption.value)
-    console.log(res)
+    targetOption.loading = false;
+    if(res.status===0){
+      const subCategorys=res.data
+      if(subCategorys && subCategorys.length>0){
+        const childrenOptions=subCategorys.map(item=>({
+          label:item.name,
+          value:item._id,
+          isLeaf:true
+        }))
+        targetOption.children =childrenOptions;
+      }else{
+        targetOption.isLeaf = true
+      }
+    }
     
     // load options lazily
-      targetOption.loading = false;
-      targetOption.children = [];
+      
       this.setState({
         options: [...this.state.options],
       });
@@ -39,6 +52,7 @@ export default class ProductUpdate extends Component {
 
   // 获取分类列表
 
+  // 获取一级分类列表
   getCategory=async (category)=>{
     const res= await reqCategory(category)
     if(res.status===0){
@@ -52,27 +66,56 @@ export default class ProductUpdate extends Component {
 
   }
 
-componentWillMount(){
+  // 获取二级分类列表
 
+  getSubCategory=async ()=>{
+    const {pCategoryId}=this.product
+    if(pCategoryId!=="0"){
+      const res=await reqCategory(pCategoryId)
+         if(res.status===0){
+            const subCategorys=res.data
+            const childrenOptions=subCategorys.map((item)=>({
+              label:item.name,
+              value:item._id,
+              isLeaf:true
+            }))
+          
+         const {options} =this.state
+         const targetOption=options.find((item)=>{return item.value===pCategoryId})
+         targetOption.children = childrenOptions
+        //  更新状态
+         this.setState({
+          options
+        })
+
+         }
+     
+
+    }
+
+  }
+
+componentWillMount(){
   this.getCategory('0')
   const product=this.props.location.state.record
-  this.setState({
-    product
-  })
+  this.product=product || {}
+  this.getSubCategory()
+
+  
 
 }
 
   render() {
 
-    const {product}=this.state || {}
-    const {categoryId,pCategoryId}=product
+    const {product}=this
+    console.log(product)
+    const {categoryId,pCategoryId,imgs}=product
     const categoryIds=[]
     if(pCategoryId==='0'){
-      categoryIds.push(pCategoryId)
+      categoryIds.push(categoryId)
     }else{
       categoryIds.push(pCategoryId)
       categoryIds.push(categoryId)
-
     }
 
     const title=(
@@ -98,16 +141,17 @@ componentWillMount(){
               <TextArea autoSize={{ minRows: 2, maxRows: 10 }} defaultValue={product.desc}/>
           </Form.Item>
           <Form.Item label="商品分类" hasFeedback>
+
+
           <Cascader
             defaultValue={categoryIds}
             options={this.state.options}
             loadData={this.loadData}
-           
             changeOnSelect
           />
           </Form.Item>
           <Form.Item label="上传图片" hasFeedback>
-              <Input />
+              <PicturesWall imgs={imgs}></PicturesWall>
           </Form.Item>
 
           <Form.Item label="商品详情" hasFeedback>
