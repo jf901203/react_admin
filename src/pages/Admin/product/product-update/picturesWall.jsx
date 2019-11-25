@@ -1,7 +1,8 @@
 import React from 'react'
-import { Upload, Icon, Modal } from 'antd';
+import { Upload, Icon, Modal, message } from 'antd';
 import PropTypes from 'prop-types'
 
+import {reqDeleteImg} from '../../../../api'
 import {BASE_URL} from '../../../../utils/constants'
 
 function getBase64(file) {
@@ -22,7 +23,6 @@ export default  class PicturesWall extends React.Component {
  constructor(props){
      super(props)
      let fileList=[]
-     
 		 const  imgs=this.props.imgs
 		 if(imgs && imgs.length>0){
 				fileList=imgs.map((item,index)=>({
@@ -30,8 +30,9 @@ export default  class PicturesWall extends React.Component {
 					name:item,
 					status:'done',
 					url:BASE_URL + item
-		
-				}))
+        }))
+        
+        console.log(fileList)
 		 }
 		 
      this.state = {
@@ -55,12 +56,60 @@ export default  class PicturesWall extends React.Component {
     });
   };
 
-  handleChange = ({ fileList }) => this.setState({ fileList });
+  handleChange = async ({ fileList,file }) =>{
+  
+    // 获取到服务器返回的数据
+    if(file.status==="done"){
+      const res=file.response
+      if(res.status===0){
+        message.success('图片上传成功')
+        const {name,url}=res.data
+         // 获取到数组中的最后一个元素
+        file=[fileList.length-1]
+        file.name=name
+        file.url=url
+
+      }else{
+        message.error('图片上传失败')
+      }
+      
+    }else if(file.status==="removed"){
+      const {name}=file
+
+      // 删除前台图片
+
+      // fileList.splice(fileList.findIndex(item => item.name === name), 1)
+
+      // 删除后台图片
+      const result = await reqDeleteImg(name)
+      console.log(result)
+      if (result.status===0) {
+        message.success('删除图片成功!')
+      } else {
+        message.error('删除图片失败!')
+      }
+    
+      
+     
+    }
+    this.setState({ fileList })
+
+   console.log(fileList)
+  };
+
+getImgs=()=>{
+ 
+  const {fileList}=this.state
+
+  const imgs=  fileList.map((item)=>item.name)
+
+  
+
+}
 
   render() {
 		const { previewVisible, previewImage, fileList } = this.state;
-		
-		console.log(fileList)
+   
     const uploadButton = (
       <div>
         <Icon type="plus" />
@@ -75,7 +124,9 @@ export default  class PicturesWall extends React.Component {
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
+          onRemove={this.handleRemove}
           name='image'
+
         >
           {fileList.length >= 8 ? null : uploadButton}
         </Upload>

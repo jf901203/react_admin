@@ -6,18 +6,22 @@ import {
   Icon, 
   Form,
   Input,
-  Cascader
+  Cascader,
+  Button
   } from 'antd'
 
 import LinkButton from '../../../../components/link-button/LinkButton'
 import {reqCategory,reqAddProduct} from '../../../../api'
 import PicturesWall from './picturesWall'
-
+import RichTextEditor from './RichTextEditor'
 
 const { TextArea } = Input;
 
 export default class ProductUpdate extends Component {
- 
+  constructor(props){
+    super(props)
+    this.pictures=React.createRef()
+  }
   state={
     options:[]
   }
@@ -100,7 +104,17 @@ componentWillMount(){
   const product=this.props.location.state.record
   this.product=product || {}
   this.getSubCategory()
+  
+  
 
+}
+
+
+handleSubmit=()=>{
+ 
+  const imgs=this.pictures.current.getImgs()
+
+  console.log(imgs)
   
 
 }
@@ -108,8 +122,9 @@ componentWillMount(){
   render() {
 
     const {product}=this
-    console.log(product)
     const {categoryId,pCategoryId,imgs}=product
+
+   
     const categoryIds=[]
     if(pCategoryId==='0'){
       categoryIds.push(categoryId)
@@ -151,11 +166,14 @@ componentWillMount(){
           />
           </Form.Item>
           <Form.Item label="上传图片" hasFeedback>
-              <PicturesWall imgs={imgs}></PicturesWall>
+              <PicturesWall imgs={imgs} ref={this.pictures}></PicturesWall>
           </Form.Item>
 
-          <Form.Item label="商品详情" hasFeedback>
-              <Input />
+          <Form.Item label="商品详情" hasFeedback labelCol={{span: 2}} wrapperCol={{span: 20}}>
+              <RichTextEditor></RichTextEditor>
+          </Form.Item>
+          <Form.Item>
+              <Button type="primary" onClick={this.handleSubmit}>提交</Button>
           </Form.Item>
         </Form>
         

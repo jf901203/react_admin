@@ -1511,3 +1511,11 @@
 4. import { Editor } from 'react-draft-wysiwyg';
 5. import draftToHtml from 'draftjs-to-html';
 6. import htmlToDraft from 'html-to-draftjs';
+
+
+## 修改功能
+
+1. 首屏把对应的原来数据显示出来
+2. 再更新数据
+
+

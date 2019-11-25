@@ -67,7 +67,7 @@ export const reqUpdateStatus=({productId,status})=>ajax('/manage/product/updateS
 
 // 删除图片的接口函数
 
-export const reqDeleteImg=(name)=>ajax('/manage/product/updateStatus',{name},'POST')
+export const reqDeleteImg=(name)=>ajax('/manage/img/delete',{name},'POST')
 
 // jsonp接口请求函数
 export const reqWeather=(city)=>{

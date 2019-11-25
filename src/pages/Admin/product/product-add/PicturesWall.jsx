@@ -42,7 +42,7 @@ export default class PicturesWall extends React.Component {
 
 
   // fileList 所有已上传图片对象的数组 file：当前操作的图片对象
-  handleChange = ({ fileList,file }) => {
+  handleChange = async ({ fileList,file }) => {
     // 上传图片发送的是ajax请求 服务器会返回一些信息
     if(file.status==='done'){
         message.success('上传成功')
@@ -55,25 +55,19 @@ export default class PicturesWall extends React.Component {
           list.url=url
        }
       
+    }else if(file.status==="removed"){
+
+         const {name}=file
+         const result = await reqDeleteImg(name)
+         if(result.status===0){
+           message.success('删除成功')
+         }
+
     }
     this.setState({fileList})
   };
 
-// 前台删除图片的同时 要删除后台的图片
-  handleRemove=async (file)=>{
-    if(file.status==='done'){
-      const res=file.response
-      if(res.status===0){
-        const {name}=res.data
-        const result = await reqDeleteImg(name)
-         if(result.status===0){
-           message.success('删除成功')
-         }
-      }
-    }
-  
 
-  }
 
 
   // 自定函数 给父组件调用的方法
@@ -101,7 +95,7 @@ export default class PicturesWall extends React.Component {
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
-          onRemove={this.handleRemove}
+          
         >
           {fileList.length >= 8 ? null : uploadButton}
         </Upload>
