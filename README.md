@@ -1519,3 +1519,10 @@
 2. 再更新数据
 
 
+
+
+## 组件的三大基本属性
+
+1. this.props.history
+2. this.props.macth
+3. this.props.location

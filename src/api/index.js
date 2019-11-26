@@ -60,7 +60,9 @@ export const reqSearchName=({pageNum,pageSize,searchType,searchName})=>ajax('/ma
 export const reqAddProduct=(product)=>ajax('/manage/product/add',product,'POST')
 
 // 更新商品
-export const reqUpdateProduct=({_id,categoryId,pCategoryId,name,desc,price,detail,imgs})=>ajax('/manage/product/update',{_id,categoryId,pCategoryId,name,desc,price,detail,imgs},'POST')
+export const reqUpdateProduct=(product)=>ajax('/manage/product/update',product,'POST')
+
+
 // 对商品进行上架/下架处理
 export const reqUpdateStatus=({productId,status})=>ajax('/manage/product/updateStatus',{productId,status},'POST')
 

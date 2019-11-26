@@ -60,26 +60,21 @@ export default  class PicturesWall extends React.Component {
   
     // 获取到服务器返回的数据
     if(file.status==="done"){
+
+      message.success('图片上传成功')
       const res=file.response
       if(res.status===0){
-        message.success('图片上传成功')
-        const {name,url}=res.data
-         // 获取到数组中的最后一个元素
-        file=[fileList.length-1]
-        file.name=name
-        file.url=url
-
-      }else{
+        const {name,url} =res.data
+        // 上传后的数据 赋值到前台显示
+        const list=fileList[fileList.length-1]
+        list.name=name
+        list.url=url
+     }else{
         message.error('图片上传失败')
       }
       
     }else if(file.status==="removed"){
       const {name}=file
-
-      // 删除前台图片
-
-      // fileList.splice(fileList.findIndex(item => item.name === name), 1)
-
       // 删除后台图片
       const result = await reqDeleteImg(name)
       console.log(result)
@@ -89,23 +84,17 @@ export default  class PicturesWall extends React.Component {
         message.error('删除图片失败!')
       }
     
-      
-     
     }
+
     this.setState({ fileList })
 
-   console.log(fileList)
   };
 
-getImgs=()=>{
- 
-  const {fileList}=this.state
-
-  const imgs=  fileList.map((item)=>item.name)
-
-  
-
-}
+  getImgs=()=>{
+    const {fileList}=this.state
+    console.log(fileList)
+    return fileList.map(item=>item.name)
+ }
 
   render() {
 		const { previewVisible, previewImage, fileList } = this.state;

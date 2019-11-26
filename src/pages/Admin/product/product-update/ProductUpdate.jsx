@@ -7,20 +7,22 @@ import {
   Form,
   Input,
   Cascader,
-  Button
+  Button,
+  message
   } from 'antd'
 
 import LinkButton from '../../../../components/link-button/LinkButton'
-import {reqCategory,reqAddProduct} from '../../../../api'
+import {reqCategory,reqUpdateProduct} from '../../../../api'
 import PicturesWall from './picturesWall'
 import RichTextEditor from './RichTextEditor'
 
 const { TextArea } = Input;
 
-export default class ProductUpdate extends Component {
+class ProductUpdate extends Component {
   constructor(props){
     super(props)
     this.pictures=React.createRef()
+    this.editor=React.createRef()
   }
   state={
     options:[]
@@ -86,6 +88,9 @@ export default class ProductUpdate extends Component {
           
          const {options} =this.state
          const targetOption=options.find((item)=>{return item.value===pCategoryId})
+            
+        
+
          targetOption.children = childrenOptions
         //  更新状态
          this.setState({
@@ -104,40 +109,78 @@ componentWillMount(){
   const product=this.props.location.state.record
   this.product=product || {}
   this.getSubCategory()
-  
-  
-
 }
 
+validator=(rule, value, callback) => {
+  if (value*1 <0) {
+      callback('介个必须大于0')
+  }
+  callback()
+}
 
+// 提交表单
 handleSubmit=()=>{
- 
-  const imgs=this.pictures.current.getImgs()
-
-  console.log(imgs)
   
-
+  // 收集数据
+  const imgs=this.pictures.current.getImgs()
+  const detail=this.editor.current.getEditorVal()
+  const {_id}=this.product
+  this.props.form.validateFields(async (errors, values)=>{
+    
+    const {name, desc, price, categoryIds} = values
+    let pCategoryId,categoryId
+    // 从数组中取出元素
+    if(categoryIds.length===1){
+      pCategoryId='0'
+      categoryId=categoryIds[0]
+    }else{
+      pCategoryId=categoryIds[0]
+      categoryId=categoryIds[1]
+    }
+    const product={
+      _id,
+      imgs,
+      name,
+      desc,
+      price,
+      pCategoryId,
+      categoryId,
+      detail
+    }
+     // 发送请求
+    const result = await reqUpdateProduct(product)
+    //根据返回结果判断
+    if(result.status===0){
+      message.success('更新成功')
+      // 跳转页面
+      this.props.history.replace('/product')
+    }else{
+      message.error('更新失败')
+    }
+  })
 }
 
   render() {
 
     const {product}=this
     const {categoryId,pCategoryId,imgs}=product
-
-   
     const categoryIds=[]
+    // 往数组中添加元素
     if(pCategoryId==='0'){
       categoryIds.push(categoryId)
     }else{
       categoryIds.push(pCategoryId)
       categoryIds.push(categoryId)
     }
-
+   
+  
     const title=(
       <span>
         <LinkButton onClick={()=>{this.props.history.goBack()}}><Icon type="arrow-left" style={{margin:'0px 5px'}} />修改商品</LinkButton>
       </span>
     )
+    // 双向数据绑定
+    const {getFieldDecorator}=this.props.form
 
     return (
       <div>
@@ -146,31 +189,62 @@ handleSubmit=()=>{
         <Form labelCol={{ span: 3 }} wrapperCol={{ span: 8 }}>
 
           <Form.Item label="商品名称" hasFeedback>
-              <Input  defaultValue={product.name}/>
+              {getFieldDecorator('name',{
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入商品名称',
+                  },
+                ],
+                initialValue:product.name
+              })(<Input placeholder="请输入商品名称"/>)}
+              
           </Form.Item>
           <Form.Item label="商品价格" hasFeedback>
-              <Input addonAfter="元" defaultValue={product.price}/>
+          {
+              getFieldDecorator('price', {
+                initialValue: product.price,
+                rules: [
+                  {required: true, message: '必须输入商品价格'},
+                  {validator:this.validator}
+                ]
+              })(<Input type='number' placeholder='请输入商品价格' addonAfter='元'/>)
+            }
           </Form.Item>
           <Form.Item label="商品描述" hasFeedback>
-             
-              <TextArea autoSize={{ minRows: 2, maxRows: 10 }} defaultValue={product.desc}/>
+               {getFieldDecorator('desc',{
+                 rules: [
+                  {
+                    required: true,
+                    message: '商品描述',
+                  },
+                ],
+                initialValue:product.desc
+               })(<TextArea autoSize={{ minRows: 2, maxRows: 10 }} />)}
+              
           </Form.Item>
           <Form.Item label="商品分类" hasFeedback>
 
-
-          <Cascader
-            defaultValue={categoryIds}
-            options={this.state.options}
-            loadData={this.loadData}
-            changeOnSelect
-          />
+             {getFieldDecorator('categoryIds',{
+               rules: [
+                {required: true, message: '必须指定商品分类'},
+              ],
+              initialValue:categoryIds
+             })(
+             
+             <Cascader
+              options={this.state.options}
+              loadData={this.loadData}
+              changeOnSelect
+            />)}
+            
           </Form.Item>
           <Form.Item label="上传图片" hasFeedback>
               <PicturesWall imgs={imgs} ref={this.pictures}></PicturesWall>
           </Form.Item>
 
           <Form.Item label="商品详情" hasFeedback labelCol={{span: 2}} wrapperCol={{span: 20}}>
-              <RichTextEditor></RichTextEditor>
+              <RichTextEditor detail={product.detail} ref={this.editor}></RichTextEditor>
           </Form.Item>
           <Form.Item>
               <Button type="primary" onClick={this.handleSubmit}>提交</Button>
@@ -182,3 +256,6 @@ handleSubmit=()=>{
     )
   }
 }
+
+
+export default Form.create({})(ProductUpdate)

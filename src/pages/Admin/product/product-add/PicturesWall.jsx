@@ -73,6 +73,7 @@ export default class PicturesWall extends React.Component {
   // 自定函数 给父组件调用的方法
   getImgs=()=>{
      const {fileList}=this.state
+     
      return fileList.map(item=>item.name)
   }
 
