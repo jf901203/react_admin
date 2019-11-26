@@ -38,8 +38,9 @@ export const reqAddCategory=({parentId,categoryName})=>ajax('/manage/category/ad
 export const reqUpdateCategorye=({categoryId,categoryName})=>ajax('/manage/category/update',{categoryId,categoryName},'POST')
 
 
-// 根据分类ID获取分类
-export const reqInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
+// 根据分类ID获取分类名称
+
+export const reqCategoryInfo=(categoryId)=>ajax('/manage/category/info',{categoryId})
 
 // 获取商品分页列表
 export const reqProduct=(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})

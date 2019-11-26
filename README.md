@@ -1526,3 +1526,83 @@
 1. this.props.history
 2. this.props.macth
 3. this.props.location
+
+
+##　dangerouslySetInnerHTML, 让React正常显示你的html代码  相当于 innerHTML
+
+1.{__html:'<p>当作标签解析</p>'} 
+
+
+##　每一个映射都要有一个key
+
+	getImgs=()=>{
+	  const {imgs}=this.product
+	  return imgs.map((item)=>{return(
+	
+	   <img style={{width:'120px'}} key={item} src={BASE_URL+item} alt="img"/>
+	
+	  )})
+	
+	 }
+
+
+##　发送异步请求获取数据
+
+1. 在前端先设置状态来显示将来获取到的数据
+2. 发送请求
+3. 根据请求结果更新状态
+
+## 通过多个await发送多个请求 有点浪费资源
+
+	 async componentDidMount(){
+	    const {pCategoryId,categoryId}=this.product
+	    // 只有一个一级分类
+	    if(pCategoryId==='0'){ 
+	       const result=await reqCategoryInfo(categoryId)
+	       if(result.status===0){
+	        const pName=result.data.name
+	        this.setState({pName})
+	       }
+	
+	    }else{ // 通过多个await发送多个请求 有点浪费资源 后一个请求是在前一个await返回结果才会发送请求
+	     
+	      const pResult=await reqCategoryInfo(pCategoryId)
+	      const cResult=await reqCategoryInfo(categoryId)
+	      const pName=pResult.data.name
+	      const cName=cResult.data.name
+	      this.setState({
+	        pName,
+	        cName
+	      })
+
+    }
+
+  }
+
+##　一次性发送多个请求 只有都成功了 才会处理结果　Promise.all([promis,promis...])
+
+	 async componentDidMount(){
+	    const {pCategoryId,categoryId}=this.product
+	    // 只有一个一级分类
+	    if(pCategoryId==='0'){ 
+	       const result=await reqCategoryInfo(categoryId)
+	       if(result.status===0){
+	        const pName=result.data.name
+	        this.setState({pName})
+	       }
+	
+	    }else{ //一级分类和二级分类都有
+	     
+	      // 一次性发送多个请求 只有都成功了 才会处理结果
+	      const results=await Promise.all([reqCategoryInfo(pCategoryId),reqCategoryInfo(categoryId)])
+	      const pName=results[0].data.name
+	      const cName=results[1].data.name
+	      this.setState({
+	        pName,
+	        cName
+	      })
+	
+	    }
+	  }
+
+

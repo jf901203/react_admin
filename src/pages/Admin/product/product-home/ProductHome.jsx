@@ -52,7 +52,7 @@ initColumns=()=>{
       dataIndex: '',
       render: (record) => <span>
 
-        <LinkButton>详情</LinkButton>
+        <LinkButton onClick={()=>{this.props.history.push('/product/detail',record)}}>详情</LinkButton>
         <LinkButton onClick={()=>{this.props.history.push({ pathname: "/product/update", state: { record } });}}>修改</LinkButton>
        
         </span>,
