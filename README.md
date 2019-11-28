@@ -1612,7 +1612,7 @@
 2. 异步获取数据更新状态 更新组件的状态
 
 
-##　触发请求函数的方式
+##　异步获取数据的方式
 
 1. 在钩子函数中自动触发
 2. 在事件回调函数中触发
@@ -1656,3 +1656,54 @@
 2. 角色：职称 经理 主管 财务 这些角色
 3. 先创建角色
 4. 再根据角色进行授权
+
+
+#　给某个用户设置角色　给某个角色设置权限
+
+## 组件是标签 可以向标签写入属性
+
+1. 属性
+2. 属性值：字符串 变量 对象 函数
+
+
+## 函数的传参方式
+
+1. function demo({productId,status}){} 传实参的时候 顺序可以不一致 但是名字必须一致 productId就是productId 不能是其他的字符
+2. function demo(productId,status){}   传实参的时候 顺序必须一致 名字可以不一致 productId可以是其他的字符
+
+
+##　s6之扩展运算符 三个点（...）　扩展运算符(…)用于取出参数对象中的所有可遍历属性，拷贝到当前对象之中
+
+1.　对象的扩展运算符
+2.　数组的扩展运算符
+
+
+	<script type="text/javascript">
+		//对象中的扩展运算符(...)用于取出参数对象中的所有可遍历属性，拷贝到当前对象之中
+		const formLayout ={
+	            labelCol: { span: 4 },
+	            wrapperCol: { span: 14 },
+	          }
+	          
+	  console.log({...formLayout})
+
+		const arr1 = [1, 2];
+		const arr2 = [...arr1];　得到一个新的数组 
+	
+	</script>
+
+
+##　三点运算符的作用 arr=[1,2,3]
+
+1. 解构 [...arr] 1 2 3
+2. 合并 [...arr,4] 相当于把4push()进arr数组中 1 2 3 4
+
+## setState  state={role:[]}
+
+1. this.setState({role}) 接受一个对象 这种方式是把原来的role直接替换掉 现在的role与原来的role没有一点关系 现在的role是全新的role
+
+2. this.setState((state)=>({[...state.role,role]})) 接受一个函数 现在的role状态在原来的role状态的基础上去修改的
+
+       this.setState((state)=>({ 
+          dataSource: [...state.dataSource,role]
+        }))
