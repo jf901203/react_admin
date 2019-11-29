@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Card,Button,Table, Modal,Form, Input,message } from 'antd';
 
-
-import {reqAddRole,reqRoleList} from  '../../../api'
+import memeryUtil from '../../../utils/memeryUtil'
+import {reqAddRole,reqRoleList,reqUpdateRole} from  '../../../api'
 import moment from '../../../utils/dateUtil'
 import RoleTree from './RoleTree'
 class Role extends Component {
@@ -84,11 +84,30 @@ handleRole=()=>{
   });
 }
 
-addRoleOk=()=>{
+addRoleOk=async ()=>{
+//  收集数据
+  const role=this.state.role
+  const menus=this.tree.current.getCheckedKeys()
+  // 授权的权限
+  role.menus=menus
+  // 授权人(当前登入的用户)
+  role.auth_name=memeryUtil.user.username
+  // 授权时间
+  role.auth_time=Date.now()
 
-  
-  const numes=this.tree.current.getCheckedKeys()
-  console.log(numes)
+  // 发送请求
+  const result = await reqUpdateRole(role)
+  if(result.status===0){
+    message.success('设置成功')
+    // 重新显示状态
+    this.setState({
+      dataSource: [...this.state.dataSource]
+    })
+
+  }else{
+    message.error('设置失败')
+  }
+
 
   this.setState({
     isShow:false
@@ -108,13 +127,12 @@ addRoleOk=()=>{
       {
         title: '创建时间',
         dataIndex: 'create_time',
-        
+        render:(record)=>moment(record)
       },
       {
         title: '授权时间',
         dataIndex: 'auth_time',
-        
-        
+        render:(record)=>moment(record)
       },
       {
         title: '授权人',
@@ -129,14 +147,7 @@ addRoleOk=()=>{
   const result=await reqRoleList()
   // 根据结果判断
   if(result.status===0){
-    const source=result.data
-    const dataSource=source.map((item)=>({
-      create_time:moment(item.create_time),
-      menus:item.menus,
-      name:item.name,
-      __v:item.__v,
-      _id:item._id
-    }))
+    const dataSource=result.data
     // 更新状态
     this.setState({
       dataSource,
@@ -214,7 +225,6 @@ componentDidMount(){
             </Form.Item>
           </Form>
         </Modal>
-
         <Modal
           title="权限名称"
           visible={this.state.isShow}
@@ -229,12 +239,12 @@ componentDidMount(){
                     required: true,
                     message: '权限名称',
                   },
-                 ]
+                 ],
+                 initialValue:role.name
                })(<Input placeholder="权限名称" />)}
-              
             </Form.Item>
           </Form>
-          <RoleTree ref={this.tree}></RoleTree>
+          <RoleTree ref={this.tree} role={role}></RoleTree>
         </Modal>
       </div>
     )

@@ -10,10 +10,13 @@ import logo from './img/logo.jpg'
 const { SubMenu } = Menu;
 
  class LeftNav extends Component {
+
+
 // 根据数据数组生成标签数组 map()高阶函数需要 return
   getMenuNode=(menuList)=>{
     return menuList.map((item)=>{
       if(!item.children){
+
         return(
           <Menu.Item key={item.key}>
                <Link to={item.key}>
@@ -22,6 +25,7 @@ const { SubMenu } = Menu;
               </Link>
           </Menu.Item>
         )
+        
       }else{
         const path=this.props.location.pathname
         // 查找一个与当前路由匹配的item
@@ -31,8 +35,6 @@ const { SubMenu } = Menu;
           // 把一个属性保存到当前组件中
           this.openKey=item.key
         }
-       
-
         return (
           <SubMenu
           key={item.key}
@@ -43,14 +45,10 @@ const { SubMenu } = Menu;
             </span>
           }
         >
-         
          {
-        
           // 递归调用
           this.getMenuNode(item.children)
-        
         }
-          
       </SubMenu>
         )
       }

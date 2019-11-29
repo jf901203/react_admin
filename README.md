@@ -912,7 +912,7 @@
 
 ## reduce()加递归调用  reduce((pre,item)=>{},[]) 累计累加  往数组中添加数据也是一种累加
 
-1. []初始值
+1. pre初始值[]
 2. pre 上一次统计的结果
 3. 一直用同一个pre 一直往pre中添加
 
@@ -932,7 +932,7 @@
 		            )
 		           )
 		      }else{
-		       
+		         // 在返回数组之前先添加数据进数组
 		         pre.push((
 		          <SubMenu
 		          key={item.key}
@@ -960,6 +960,24 @@
 		    },[])
 		  
 		  }
+
+
+##　reduce高阶函数遍历和递归
+
+1. reduce((pre,item)=>{},[])  pre的初始值是空数组 [] 之后的累加都以pre为基数
+2. reduce((pre,item)=>{},0)   pre的初始值的数字0 之后的累加都以pre为基数
+	 renderTreeNodes = data =>
+	    data.reduce((pre,item)=>{
+	      pre.push((
+	        <TreeNode title={item.title} key={item.key}>
+	          {item.children ? this.renderTreeNodes(item.children):null}
+	        </TreeNode>
+	      ))
+	      return pre
+	    },[])
+
+
+
 
 ## bug
 
@@ -1085,6 +1103,7 @@
 4. 读取状态     ===>{}=>this.state ===>渲染函数中
 
 
+
 ## 数据在组件状态中 只要状态发生改变  组件会重新渲染
 
 1. 设计状态 state={}
@@ -1170,6 +1189,8 @@
 3. 读取接收的属性
 
     const categoryName=this.props.categoryName
+
+4. 读取属性 一般在钩子函数中读取 construct(){}  render(){} 回调函数中
 
 
 ## 数据可以保存在组件对象上 也可以保存在状态中
@@ -1485,7 +1506,7 @@
 			  }
 			}
        
-         //访问 Refs
+         //访问 得到组件标签对象
          this.myRef.current;
          
          <CustomTextInput ref={this.textInput} />
@@ -1670,6 +1691,7 @@
 
 1. function demo({productId,status}){} 传实参的时候 顺序可以不一致 但是名字必须一致 productId就是productId 不能是其他的字符
 2. function demo(productId,status){}   传实参的时候 顺序必须一致 名字可以不一致 productId可以是其他的字符
+3. function demo(obj){} 接受一个对像
 
 
 ##　s6之扩展运算符 三个点（...）　扩展运算符(…)用于取出参数对象中的所有可遍历属性，拷贝到当前对象之中
@@ -1707,3 +1729,30 @@
        this.setState((state)=>({ 
           dataSource: [...state.dataSource,role]
         }))
+
+
+##　组件的显示隐藏 组件只有切换路由组件的时候才会进入死亡钩子
+
+1. 组件的显示隐藏只有第一次会进入组件的生命周期
+2. 隐藏之后不会进入组件的死亡周期
+3. 所以组件的数据还是隐藏之前的数据
+4. componentWillReceiveProps(){} 组件将要接收新的属性 这个钩子初始显示的时候不会调用 只有到数据更新的时候才会调用
+
+
+## componentWillReceiveProps(){}组件将要接收的新的属性 当组件接收到新的数据时会自动调用
+
+1. 第一次接收属性的时候不会调用
+2. 当接收的属性发生改变了就会调用
+3. 在render()执行之前会被调用
+
+
+##　render()钩子函数
+
+1. 组件进入生命周期会被第一次调用
+2. 组件中的状态每一次更新都会被调用
+3. setState()方法会导致render()函数重新调用
+
+
+##　componentWillUnmount(){} 组件将要死亡
+
+1. 切换路由组件的时候组件会进入消亡的钩子
