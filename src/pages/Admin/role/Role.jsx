@@ -144,7 +144,7 @@ addRoleOk=async ()=>{
   }
   getRoleList= async ()=>{
   // 发送请求
-  const result=await reqRoleList()
+  const result=await reqRoleList()  //后面的代码都是异步的 相当于在promise成功的回调中执行的
   // 根据结果判断
   if(result.status===0){
     const dataSource=result.data

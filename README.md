@@ -1751,8 +1751,292 @@
 1. 组件进入生命周期会被第一次调用
 2. 组件中的状态每一次更新都会被调用
 3. setState()方法会导致render()函数重新调用
+4. render()会根据state状态进行初始化显示  初始化会调用
+5. render()会根据state状态的发生进行更新显示 状态更新会调用
 
 
 ##　componentWillUnmount(){} 组件将要死亡
 
 1. 切换路由组件的时候组件会进入消亡的钩子
+
+
+## setState()
+
+## setState(updater,[callback]) 
+
+1. updater为返回setChange对象的函数:(state,props)=>stateChange
+2. 接收的state和props被保证为最新的
+3. callback是可选的回调函数，在state状态更新并且render()函数执行页面重新渲染之后被调用
+
+## setState(stateChange,[callback])
+
+1. stateChange为对像
+2. callback是可选的回调函数 在state状态更新并且render()函数执行页面重新渲染之后被调用
+
+## callback(state,props)
+
+1. 参数state状态被保证是最新的状态
+2. 参数props属性被保证是最新的属性
+
+## 总结
+
+1. 对象方式是函数方式的简写方式
+2. 如果新的状态不依赖于原状态====>使用对象的方式
+3. 如果新的状态依赖于于原来的状态====>使用函数的方式
+4. 如果需要在setState()后获取最新的状态数据，在第二个callback函数中读取
+
+	state={
+	 name:'lisi'
+	}
+
+	onHandle=()=>{
+	
+	 this.setState({name:'zhangsan'})  
+	  //不能立即拿到最新的状态
+	  console.log(this.state.name)  //===>lisi
+	  
+	}
+
+
+    onHandle=()=>{
+	
+	 this.setState({name:'zhangsan'},(state)=>{
+          console.log(this.state.name)  ==>在回调函数中获取最新的状态
+       })  
+	 
+	  
+	}
+
+
+## react的相关会回调函数
+
+1. 钩子回调函数
+2. react事件监听回调
+
+
+## 回调函数
+
+1. element.onclick=()=>{} DOM事件监听回调函数 
+2. setTimeOut(()=>{},1000) 定时器回调函数
+3. ajax()回调函数
+4. Promise.resolve().than(()=>{}) 成功回调 === await promise之后执行的setState()相当于在Promise.resolve().than(()=>{setState()})里面执行
+5. Promise.reject().than(()=>{})失败回调
+
+##　传统的DOM事件处理程序
+
+1.　即在目标DOM事件的基础上绑定事件。如果在声明函数时加上括号，函数会立即调用，去掉括号，函数不会立即调用
+
+			<body>
+			    <div id="demo">safag</div>
+			</body>
+			
+			
+			</html>
+			<script type="text/javascript">
+			
+			function change(){
+				alert()
+			}
+			var demo = document.getElementById("demo");
+             // 原声DOM事件监听回调函数
+			demo.onclick = change
+			
+			</script>
+
+
+
+## setState()更新状态是异步还是同步的
+
+## 执行setState()的位置？
+
+1. 在react控制的异步回调函数中：生命钩子函数/react事件监听回调
+2. 非react控制的异步回调函数：定时器函数/原生DOM事件监听回调/promise回调
+
+##　异步或同步
+
+1. react相关的回调中执行setState() 就是异步的 不能立即获取到最新的state状态 异步更新
+2. 其他异步回调中执行setState() 就是同步的 可以立即获取到state状态 同步更新
+
+
+##　react事件监听回调中, setState()是异步更新状态 不能立即获取到最新的状态
+
+	     update1 = () => {
+	      console.log('update1 setState()之前', this.state.count)
+	      this.setState(state => ({count: state.count + 1}))
+	      console.log('update1 setState()之后', this.state.count)
+	    }
+       
+         1. console.log('update1 setState()之前', this.state.count)
+         2. console.log('update1 setState()之后', this.state.count)
+         3. count：2
+         4. render()
+
+
+## react生命周期勾子中, setState()是异步更新状态 不能立即获取到最新的状态
+
+
+    componentDidMount () {
+      console.log('componentDidMount setState()之前', this.state.count)  异步中同步的代码
+      this.setState(state => ({count: state.count + 1}))                 异步中异步的代码
+      console.log('componentDidMount setState()之后', this.state.count)  异步中同步的代码
+    }
+        
+
+         1. console.log('componentDidMount setState()之前', this.state.count)
+         2. console.log('componentDidMount setState()之后', this.state.count)
+         3. count：2
+         4. render()
+
+
+## 定时器回调 / 原生事件监听回调 / promise回调 /... 都可以获取到最新的state状态
+
+## 定时器回调
+
+
+	    update2 = () => {
+          //
+	      setTimeout(() => { 异步函数
+	        console.log('setTimeout setState()之前', this.state.count) 同步代码
+	        this.setState(state => ({count: state.count + 1})) 同步代码
+	        console.log('setTimeout setState()之后', this.state.count) 同步代码
+	      })
+	    }
+
+     1. console.log('setTimeout setState()之前', this.state.count) 
+     2. count：2
+     3. render()
+     4. console.log('setTimeout setState()之后', this.state.count)
+
+
+##  原生事件监听回调
+
+
+		update3 = () => {
+	      const h2 = this.refs.count
+	      h2.onclick = () => { 异步事件监听
+	        console.log('onclick setState()之前', this.state.count)  同步的代码
+	        this.setState(state => ({count: state.count + 1}))       同步的代码
+	        console.log('onclick setState()之后', this.state.count)  同步的代码
+	      }
+	    }
+
+        1. console.log('onclick setState()之前', this.state.count)
+        2. count：2
+        3. render()
+        4. console.log('onclick setState()之后', this.state.count)
+
+
+## promise回调
+
+	     update4 = () => {
+	      Promise.resolve().then(value => { 异步回调函数 
+	        console.log('Promise setState()之前', this.state.count)    同步代码
+	        this.setState(state => ({count: state.count + 1}))         同步代码
+	        console.log('Promise setState()之后', this.state.count)     同步代码
+	      })
+	    }
+       1. console.log('Promise setState()之前', this.state.count)
+       2. count：2
+       3. render()
+       4. console.log('Promise setState()之后', this.state.count)
+
+
+## 标签的ref属性能获取到真实的DOM节点
+
+
+			constructor(props){
+			  
+			 super(props)
+			
+			  this.myRef=React.createRef()
+			
+			}
+			
+			
+			<p ref={this.myRef}>
+			
+			this.myRef.current
+		
+		    <p ref="my">
+		    
+		    this.refs.my
+
+
+##　react控制的回调函数 
+
+1. react事件回调函数
+2. 生命周期回调函数
+
+
+## 回调函数
+
+1. DOM事件回调函数
+2. ajax回调函数
+3. 定时器回调函数
+4. promise回调函数
+
+## 关于异步的setState()
+
+### 在react控制的回调函数多次调用setState() 如何处理
+
+1. setState({}):如果是对象的形式 会把状态都合并更新一次状态 只调用一次render()更新界面 ===>状态更新和界面更新都合并了
+2. setState(fn):如果是函数的形式 状态会多次更新 只调用一次render()更新界面 ===>状态更新没有合并 当界面更新合并了
+
+
+## 关于同步的setState()  更新状态出发render()
+
+1. setState()一更新就会执行一次render()函数 不会合并
+
+## 如何得到异步更新后的状态数据
+
+1. 在setState()的callback函数中读取
+
+
+## setState()面试题
+
+
+			 class StateTest extends React.Component {
+			
+			    state = {
+			      count: 0,
+			    }
+			
+			    componentDidMount() { //异步函数 
+
+			      this.setState({count: this.state.count + 1})  //异步代码  状态会合并
+			      this.setState({count: this.state.count + 1})  //异步代码  状态会合并
+			      console.log(this.state.count) // 2 ==> 0      //同步代码
+			
+			      this.setState(state => ({count: state.count + 1})) //异步代码 状态不会合并 但状态会更新
+			      this.setState(state => ({count: state.count + 1})) //异步代码 状态不会合并 但状态会更新 只调用一次render()
+			      console.log(this.state.count) // 3 ==> 0           //同步代码
+			
+			      setTimeout(() => { //异步函数  宏任务代码
+			        this.setState({count: this.state.count + 1})  //同步代码 调用render()后 再执行以下代码
+			        console.log('timeout', this.state.count) // 10 ==> 6  //同步代码
+			
+			        this.setState({count: this.state.count + 1})  //同步代码 调用render()后 再执行以下代码 
+			        console.log('timeout', this.state.count) // 12 ==> 7  //同步代码
+			      }, 0)
+			
+			      Promise.resolve().then(value => { //异步函数  微任务代码
+			        this.setState({count: this.state.count + 1}) //同步代码 更新状态 调用render()后 再执行以下代码
+			        console.log('promise', this.state.count)  // 6 ==>4 //同步代码
+			
+			        this.setState({count: this.state.count + 1}) //同步代码 更新状态 调用render()后 再执行以下代码
+
+			        console.log('promise', this.state.count) // 8 ==> 5 //同步代码
+			      })
+			    }
+			
+			    render() { //初始化会执行一次
+
+			      const count = this.state.count
+			      console.log('render', count)  // 1 ==> 0   4 ==>3   5 ==>4  7 ==>5  9 ==>6  11 ==>7
+			      return (
+			        <div>
+			          <p>{count}</p>
+			        </div>
+			      )
+			    }
+			  }

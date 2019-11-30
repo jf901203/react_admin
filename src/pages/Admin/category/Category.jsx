@@ -20,13 +20,18 @@ export default class Category extends Component {
   
   }
 
-  // 显示指定一级分类对象的二级列表
+  // 显示指定一级分类对象的二级列表  react控制的事件回调函数中的this.setState()函数是异步执行的
+  // this.setState()之前或者之后的所有代码都执行完毕才会执行this.setState()函数中的代码
   subCategory=(record)=>{
     const {name,_id}=record
+
+    
     this.setState({parentId:_id,parentName:name},()=>{
       // 获取二级分类列表
       this.getCategory()
     })
+
+
   }
 
   // 发送请求获取一级/二级列表
