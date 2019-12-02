@@ -2,27 +2,43 @@ import React, { Component } from 'react'
 import { Card,Button,Table } from 'antd';
 
 import LinkButton from '../../../../components/link-button/LinkButton'
+import {reqUsers} from '../../../../api'
 export default class UserHome extends Component {
 
 		// 设置组件的初始化状态 
 		state={
-      dataSource : [
-				{
-				
-					name: '胡彦斌',
-					age: 32,
-					address: '西湖区湖底公园1号',
-				},
-				{
-					
-					name: '胡彦祖',
-					age: 42,
-					address: '西湖区湖底公园1号',
-				},
-				
-			]
+			users:[],
+			roles:[],
+			isShow:false
+		}
+
+		// 根据数组生成一个对象
+
+		creatName=(roles)=>{
+		this.roleName=	roles.reduce((pre,role)=>{
+        pre[role.role_id]=pre[role.name]
+				return pre
+			},{})
+
 		}
 	 
+		// 异步获取用户列表
+		getUsers=async ()=>{
+		
+			 const result=await reqUsers()
+			 if(result.status===0){
+				 const {users,roles}=result.data
+				 console.log(users)
+         this.creatName(roles)
+				 this.setState({
+					users,
+					roles
+				 })
+        
+			 }
+
+		}
+
 		// 同步准备数据
 
 		initColumns=()=>{
@@ -30,32 +46,34 @@ export default class UserHome extends Component {
 			this.columns=[
         {
 					title: '用户名',
-					dataIndex: 'name',
+					dataIndex: 'username',
 				
 				},
 				{
 					title: '邮箱',
-					dataIndex: 'age',
+					dataIndex: 'email',
 					
 				},
 				{
 					title: '电话',
-					dataIndex: 'address',
+					dataIndex: 'phone',
 				
 				},
 				{
 					title: '注册时间',
-					dataIndex: 'address',
+					dataIndex: 'create_time',
 					
 				},
 				{
 					title: '所属角色',
-					dataIndex: 'address',
-					
+					dataIndex: 'role_id',
+					render: (record)=>{
+						console.log(record)
+					}
 				},
 				{
 					title: '操作',
-					dataIndex: 'address',
+					
 				  render: () => {
 						return(
 							<span>
@@ -69,21 +87,24 @@ export default class UserHome extends Component {
 		}
 
 // 在渲染虚拟DOM之前把同步的数据准备好
-
 componentWillMount(){
 	this.initColumns()
+}
+
+componentDidMount(){
+	this.getUsers()
 }
 
     render() {
 			const title=(
 				<Button type="primary">创建用户</Button>
 			)
-				const {dataSource}=this.state
+				const {users}=this.state
 				
         return (
 				<Card size="small" title={title}  style={{ width: '100%' }}>
 					<Table 
-					dataSource={dataSource} 
+					dataSource={users} 
 					columns={this.columns} 
 					bordered
 					rowKey="_id"

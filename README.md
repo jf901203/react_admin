@@ -1010,6 +1010,11 @@
 5. componentDidMount() 异步发送ajax 获取到数据 更新state状态 触发render()函数的重新渲染
 6. 在发送ajax异步函数之前 组件中必须有自身的渲染状态 发送请求 返回数据 才能更新这个状态
 
+## componentDidMount()异步发送请求
+
+1. 在组件的状态中根据返回的数据初始化组件的状态
+2. 返回什么数据初始化什么状态
+
 
 ## render() 渲染函数 需要渲染的数据必须在这个钩子中取出来 才能将数据展现到页面上
 
@@ -1635,7 +1640,7 @@
 
 ##　异步获取数据的方式
 
-1. 在钩子函数中自动触发
+1. 在钩子函数中自动触发 定义一个getInitailVaule()函数 获取数据列表
 2. 在事件回调函数中触发
 
 
@@ -1731,6 +1736,43 @@
         }))
 
 
+## 三点运算符 ...名为解构 顾名思义就是分解一个数据的结构
+
+
+	<script type="text/javascript">
+	
+	var obj={
+		name:'xahgn',
+		age:1,
+		naum:'safag'
+	}
+	
+	console.log({...obj})
+	
+	</script>
+
+## 什么数据可以被分解
+
+1. 所有可被遍历的数据，如对象、数组、argument，另外字符串也可以结构(某种意义上字符串可以理解为数组)。
+
+## 解构一个对象
+
+1. 得到的是所有可枚举的私有的属性
+2. 返回一个对象的内部的每一个属性
+
+
+## 解构一个数组
+
+1. 可以理解为遍历取值
+2. 返回数组内部的每一个值
+
+
+## 浅拷贝
+
+1. ...还是assign都是浅拷贝，什么是浅拷贝，顾名思义就是只拷贝第一层属性，如果第一层属性的值为一个引用类型的数据，那么复制的就是这个数据的地址，也就是并没有把数据本身拷贝过来，只是说我记住你了，有事我再找你
+
+
+
 ##　组件的显示隐藏 组件只有切换路由组件的时候才会进入死亡钩子
 
 1. 组件的显示隐藏只有第一次会进入组件的生命周期
@@ -1781,7 +1823,7 @@
 ## 总结
 
 1. 对象方式是函数方式的简写方式
-2. 如果新的状态不依赖于原状态====>使用对象的方式
+2. 如果新的状态不依赖于原状态 是一个新的状态====>使用对象的方式
 3. 如果新的状态依赖于于原来的状态====>使用函数的方式
 4. 如果需要在setState()后获取最新的状态数据，在第二个callback函数中读取
 
@@ -1882,7 +1924,7 @@
     }
         
 
-         1. console.log('componentDidMount setState()之前', this.state.count)
+         1. console.log('setState()之前', this.state.count)
          2. console.log('componentDidMount setState()之后', this.state.count)
          3. count：2
          4. render()
@@ -2040,3 +2082,79 @@
 			      )
 			    }
 			  }
+
+
+## 同步代码与异步代码
+
+1. 同步代码会顺序执行
+2. 异步代码将会在同步代码执行完毕后才有可能执行
+
+## 生命周期的执行顺序和宏队列与微队列 同步和异步的问题
+
+
+##　setState的对象形式和函数形式
+
+1. 对象形式在异步中 会合并 执行一次render()
+2. 函数形式在异步中 一直更新 执行一次render()
+3. 函数形式总能保证state状态是最新的
+
+
+##　component存在的问题
+
+1. 父组件重新render(),子组件也会重新render(),即使状态没有任何变化
+2. 当前组件setState() 重新执行render() 即使state没有任何变化
+
+
+## 解决component的存在问题
+
+1. 原因：组件的shouldComponentUpdate()默认返回true,即使数据没有变化render()都会重新执行
+2. 办法1：重写shouldComponentUpdate() 判断如果数据有变化 返回true 否则返回false
+3. 办法2：使用PureComponent代替Component
+4. 说明：一般都使用PureComponent来优化组件性能
+
+
+## PureComponent的基本原理 PureComponent声明的组件内置了shouldComponentUpdate()方法 对新老状态和新老属性都做了浅比较
+
+1. 重写了shouldComponentUpdate()方法
+2. 对组件的新/旧state和props中的数据进行浅比较 如果没有变化 返回false 否则返回true
+3. 一旦shouldComponentUpdate()返回false 不用在执行用于更新的render()
+
+## 浅比较
+
+1. 只是比较变量的本身
+2. 变量内部的数据没有比较
+
+## 面试题
+
+1. 组件的哪个生命钩子能实现组件化？ shouldComponentUpdate()
+2. PureComponent的原理 重写了shouldComponentUpate() 方法
+3. 区别Component与PureComponent
+
+
+##　显示的时候不能直接对象 而是把对象内部展现的数据读取出来显示
+
+1. 只改变对象本身内部的数据，并没有改变对象本身，Component会认为状态没有改变
+
+
+##　state接受的数据类型
+
+1. 数字类型
+2. 字符串类型
+3. 布尔类型
+4. 引用类型 
+		
+	state = {
+	  m1:2,
+	  m2:'zhang',
+	  m3:true,
+	  m4:[],           状态更新时是更新数组本身 即m4是一个新的数组 让m4引用着
+	  m5: {count: 1}   状态更新时是更新对象本身 即m5是一个新的对象 让m5引用着
+	}
+
+
+
+## PureComponent 状态对象内部的数据发生改变 PureComponent中的shouldComponentUpdate()做的新老数据和属性的浅比较
+
+1. [...this.state.obj] 返回的是一个新的数组
+2. {...this.state.obj} 返回的是一个新的对象 
+

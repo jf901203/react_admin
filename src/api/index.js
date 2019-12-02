@@ -84,6 +84,9 @@ export const reqUpdateRole=(role)=>ajax('/manage/role/update',role,'POST')
 
 export const reqAddRole=(roleName)=>ajax('/manage/role/add',{roleName},'POST')
 
+// 获取所有用户列表 前台分页
+export const reqUsers=()=>ajax('/manage/user/list')
+
 
 
 // jsonp接口请求函数
