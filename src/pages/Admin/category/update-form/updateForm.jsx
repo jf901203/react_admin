@@ -15,7 +15,7 @@ import { Form,Input} from 'antd';
 
  componentWillMount(){
 
-  // 将form对象传递给父组件
+  // 将form对象传递给父组件 子组件调用父组件的方法 把子组件的数据当做父组件的函数参数传递给父组件
 
   this.props.setForm(this.props.form)
 

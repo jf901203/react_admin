@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Typography,Card,Icon, message} from 'antd';
+import { List,Card,Icon} from 'antd';
 
 import LinkButton from '../../../../components/link-button/LinkButton'
 import './detail.less'

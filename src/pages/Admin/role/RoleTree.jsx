@@ -6,7 +6,7 @@ import menuList from '../../../menuConfig/menuList'
 const { TreeNode } = Tree;
 const treeData = menuList
 
-export default class RoleTree extends React.Component {
+export default class RoleTree extends Component {
   static propTypes={
     role:PropTypes.object
   }

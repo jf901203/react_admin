@@ -87,7 +87,17 @@ export const reqAddRole=(roleName)=>ajax('/manage/role/add',{roleName},'POST')
 // 获取所有用户列表 前台分页
 export const reqUsers=()=>ajax('/manage/user/list')
 
+// 添加用户
 
+export const reqUserAdd=(users)=>ajax('/manage/user/add',users,'POST')
+
+// 修改用户
+
+export const reqUserUpdate=(user)=>ajax('/manage/user/update',user,'POST')
+
+// 删除用户
+
+export const reqUserDel=(userId)=>ajax('/manage/user/delete',{userId},'POST')
 
 // jsonp接口请求函数
 export const reqWeather=(city)=>{

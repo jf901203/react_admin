@@ -4,6 +4,8 @@ import { Card,Button,Table, Modal,Form, Input,message } from 'antd';
 import memeryUtil from '../../../utils/memeryUtil'
 import {reqAddRole,reqRoleList,reqUpdateRole} from  '../../../api'
 import moment from '../../../utils/dateUtil'
+import storageUtils from '../../../utils/localStorage'
+
 import RoleTree from './RoleTree'
 class Role extends Component {
 
@@ -98,11 +100,29 @@ addRoleOk=async ()=>{
   // 发送请求
   const result = await reqUpdateRole(role)
   if(result.status===0){
-    message.success('设置成功')
-    // 重新显示状态
-    this.setState({
-      dataSource: [...this.state.dataSource]
-    })
+    
+    // 如果更新的是用户自己的权限 强制退出
+    if(memeryUtil.user.role._id===role._id){
+      // 清空登入信息
+      memeryUtil.user={}
+      // 清空缓存
+      storageUtils.removeUser()
+      
+      // 重新登入
+
+      this.props.history.replace('/login')
+      message.success('重新设置了权限成功，重新登入')
+
+    }else{
+
+      message.success('设置成功')
+      // 重新显示状态
+      this.setState({
+        dataSource: [...this.state.dataSource]
+      })
+
+    }
+    
 
   }else{
     message.error('设置失败')
@@ -194,7 +214,15 @@ componentDidMount(){
           columns={this.columns} 
           rowKey='_id'
           bordered
-          rowSelection={{type:'radio',selectedRowKeys:[role._id]}}
+          rowSelection={{
+            type:'radio',
+            selectedRowKeys:[role._id],
+            onSelect:(role)=>{
+              this.setState({
+                role
+               })
+            }
+          }}
           onRow={this.handleRow}
           pagination={{
             defaultCurrent:1,
@@ -203,7 +231,7 @@ componentDidMount(){
           }}
           
           
-          />;
+          />
       </Card>
       <Modal
           title="创建角色"

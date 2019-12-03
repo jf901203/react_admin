@@ -18,10 +18,6 @@ import memery from '../../utils/memeryUtil'
   validatorHandle=(rule, value, callback)=>{
     if(!value){
       callback('必填')
-    }else if(value.length<4){
-      callback('必须大于4位')
-    }else if(value.length>12){
-      callback('必须小于12位')
     }else if(!/^[a-zA-Z0-9_]+$/.test(value)){
       callback('必须以数字、字母或下滑线开头')
     }else{
@@ -87,7 +83,7 @@ import memery from '../../utils/memeryUtil'
           {getFieldDecorator('username',{
            rules: [
              {required: true, message: '请输入用户名'},
-             {min:4,message: '用户名最小为4位'},
+           
              {max:14,message: '用户名最大为14位'}
           ],
           initialValue:'admin'

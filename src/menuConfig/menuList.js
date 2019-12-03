@@ -3,7 +3,8 @@ const menuList=[
     {
         key:"/home",
         type:'home',
-        title:'首页'
+        title:'首页',
+        isPublic:true, // 所有用户都可以访问首页
     },
     {
         key:"/products",
